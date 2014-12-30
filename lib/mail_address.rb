@@ -1,5 +1,6 @@
 require "mail_address/version"
 
 module MailAddress
-  # Your code goes here...
+  require "mail_address/address"
+  require "mail_address/mail_address"
 end
