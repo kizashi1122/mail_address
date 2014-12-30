@@ -1,6 +1,17 @@
 # MailAddress
 
-TODO: Write a gem description
+MailAddress is a simple email address parser.
+This library is implemented based on Perl Module Mail::Address.
+
+[mail](https://github.com/mikel/mail) is a great gem library. But some email addresses (mostly are violated RFC) are unparsable with mail gem which is strictly RFC compliant. In perl, [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod) is a very common library to parse email address. Mail::Address conviniently can parse even RFC-violated email addresses such as:
+
+```rb
+# mail gem cannot parse the following addresses
+Ello [Do Not Reply] <do-not-reply@ello.co> # [, ] are not permitted according to RFC5322
+大阪 太郎<osaka@example.com> # no whitespace just before <
+```
+
+So I straightforwardly converted Perl module Mail::Address to Ruby gem.
 
 ## Installation
 
@@ -20,7 +31,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+It's almost the same as Mail::Address(Perl).
+
+```rb
+require 'mail_address'
+
+addrs = MailAddress.parse(line)
+
+addrs.each do |addr|
+  p addr.format
+end
+```
 
 ## Contributing
 
