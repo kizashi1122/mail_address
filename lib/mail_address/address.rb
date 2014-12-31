@@ -4,12 +4,12 @@ module MailAddress
 
   class Address
 
-    def initialize(phrase, email, comment)
+    def initialize(phrase, address, comment)
       @phrase = phrase
-      @email = email
+      @address = address
       @comment = comment
     end
-    attr_accessor :phrase, :email, :comment
+    attr_accessor :phrase, :address, :comment
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
 
@@ -21,9 +21,9 @@ module MailAddress
           : @phrase.match(/(?<!\\)"/)            ? @phrase
           : %Q("#{@phrase}")
           )
-        addr.push "<#{@email}>" if !@email.nil? && @email.length > 0
-      elsif !@email.nil? && @email.length > 0 then
-        addr.push(@email)
+        addr.push "<#{@address}>" if !@address.nil? && @address.length > 0
+      elsif !@address.nil? && @address.length > 0 then
+        addr.push(@address)
       end
 
       if (!@comment.nil? && @comment.match(/\S/)) then
@@ -37,7 +37,7 @@ module MailAddress
 
     def name
       phrase = @phrase
-      addr   = @email
+      addr   = @address
 
       phrase = @comment unless !phrase.nil? && phrase.length > 0
 
@@ -60,14 +60,14 @@ module MailAddress
     end
 
     def host
-      addr = @email || '';
+      addr = @address || '';
       i = addr.rindex('@')
       i >= 0 ? addr.substr(i + 1) : nil
     end
 
 
     def user
-      addr = @email || '';
+      addr = @address || '';
       i = addr.rindex('@')
       i >= 0 ? addr.substr(0, i) : addr
     end
