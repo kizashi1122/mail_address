@@ -1,4 +1,4 @@
-# MailAddress
+# MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address)
 
 MailAddress is a simple email address parser.
 This library is implemented based on Perl Module Mail::Address.
