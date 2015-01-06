@@ -4,10 +4,10 @@ module MailAddress
   def self.parse(*addresses)
     lines = addresses.grep(String)
     line = lines.join('')
-    
+
     phrase, comment, address, objs = [], [], [], []
     depth, idx = 0, 0
-    
+
     tokens = _tokenize lines
     len    = tokens.length
     _next  = _find_next idx, tokens, len
@@ -18,17 +18,18 @@ module MailAddress
       if (substr == '(') then
         comment.push(token)
       elsif (token == '<') then
-        depth += 1 
+        depth += 1
       elsif (token == '>') then
         depth -= 1 if depth > 0
       elsif (token == ',' || token == ';') then
         raise "Unmatched '<>' in line" if depth > 0
         o = _complete(phrase, address, comment)
+
         objs.push(o) if o
         depth = 0
         _next = _find_next idx+1, tokens, len
       elsif (depth > 0) then
-        address.push(token) 
+        address.push(token)
       elsif (_next == '<') then
         phrase.push(token)
       elsif ( token.match(/^[.\@:;]/) || address.empty? || address[-1].match(/^[.\@:;]/) ) then
@@ -66,12 +67,12 @@ module MailAddress
               field << $1
               depth -= 1
               throw :PAREN if depth == 0
-              field << $1 if line.sub!(/\A(([^\(\)\\]|\\.)+)/, '') then
+              field << $1 if line.sub!(/\A(([^\(\)\\]|\\.)+)/, '')
             end
           end
         end
         raise "Unmatched () '#{field}' '#{line}'" if depth > 0
-        
+
         field.sub!(/\s+\Z/, '')
         words.push(field)
 
