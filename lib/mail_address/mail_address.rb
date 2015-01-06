@@ -107,7 +107,9 @@ module MailAddress
 
   def self._complete (phrase, address, comment)
     phrase.length > 0 || comment.length > 0 || address.length > 0 or return nil
-    MailAddress::Address.new(phrase.join(' '), address.join(''), comment.join(' '))
+    new_address = MailAddress::Address.new(phrase.join(' '), address.join(''), comment.join(' '))
+    phrase.clear; address.clear; comment.clear
+    new_address
   end
 
 end
