@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["kizashi1122@gmail.com"]
   spec.summary       = %q{Simple Mail Address Parser}
   spec.description   = %q{This library is implemented based on Perl Module Mail::Address.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/kizashi1122/mail_address"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -20,5 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency 'rspec', '~> 3.1.0'
+  spec.add_development_dependency 'rspec', '~> 3.1', '>= 3.1.0'
+  spec.add_development_dependency "coveralls"
 end
