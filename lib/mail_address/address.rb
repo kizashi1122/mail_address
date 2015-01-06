@@ -1,5 +1,3 @@
-require 'mail_address/parser'
-
 module MailAddress
 
   class Address
@@ -62,14 +60,14 @@ module MailAddress
     def host
       addr = @address || '';
       i = addr.rindex('@')
-      i >= 0 ? addr.substr(i + 1) : nil
+      i >= 0 ? addr[i + 1 .. -1] : nil
     end
 
 
     def user
       addr = @address || '';
       i = addr.rindex('@')
-      i >= 0 ? addr.substr(0, i) : addr
+      i >= 0 ? addr[0 ... i] : addr
     end
 
     private
