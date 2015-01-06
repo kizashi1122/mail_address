@@ -36,11 +36,24 @@ It's almost the same as Mail::Address(Perl).
 ```rb
 require 'mail_address'
 
+line = "John 'M' Doe <john@example.com> (this is a comment), 大阪 太郎 <osaka@example.jp>"
 addrs = MailAddress.parse(line)
 
-addrs.each do |addr|
-  p addr.format
-end
+p addrs[0].format     # "John 'M' Doe <john@example.com> (this is a comment)"
+p addrs[0].address    # "john@example.com"
+p addrs[0].name       # "John 'M' Doe"
+p addrs[0].comment    # "(this is a comment)"
+p addrs[0].phrase     # "John 'M' Doe"
+p addrs[0].host       # "example.com"
+p addrs[0].user       # "john"
+
+p addrs[1].format     # "\"大阪 太郎\" <osaka@example.jp>"
+p addrs[1].address    # "osaka@example.jp"
+p addrs[1].name       # "大阪 太郎"
+p addrs[1].comment    # ""
+p addrs[1].phrase     # "大阪 太郎"
+p addrs[1].host       # "example.jp"
+p addrs[1].user       # "osaka"
 ```
 
 ## Contributing
