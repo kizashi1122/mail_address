@@ -1,7 +1,33 @@
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 require 'pp'
 
 describe MailAddress do
+
+  it "normal case" do
+    line = "John 'M' Doe <john@example.com> (this is a comment), 大阪 太郎 <osaka@example.jp>"
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq("John 'M' Doe <john@example.com> (this is a comment)")
+    expect(results[0].address).to eq("john@example.com")
+    expect(results[0].name).to eq("John 'M' Doe")
+    expect(results[0].comment).to eq("(this is a comment)")
+    expect(results[0].phrase).to eq("John 'M' Doe")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq("john")
+
+    # Perl module Mail::Address returns '大阪 太郎 <osaka@example.jp>' (no double quote)
+    # because regular expression \w matches even multibyte characters.
+    expect(results[1].format).to eq("\"大阪 太郎\" <osaka@example.jp>")
+
+    expect(results[1].address).to eq("osaka@example.jp")
+    expect(results[1].name).to eq("大阪 太郎")
+    expect(results[1].comment).to eq("")
+    expect(results[1].phrase).to eq("大阪 太郎")
+    expect(results[1].host).to eq("example.jp")
+    expect(results[1].user).to eq("osaka")
+  end
+
   it 'Perl Module Pod test data' do
 
     data = [
@@ -138,19 +164,19 @@ describe MailAddress do
         '"Foo; Bar" <both@example.com>',
         'Foo; Bar']
     ]
-    
+
     data.each do |d|
       test_src = d[0]
       exp_format = d[1]
       exp_name = d[2]
       p test_src
       result = MailAddress.parse(test_src)[0]
- 
+
       result_format = result.format || ""
       result_name = result.name || ""
 
       expect(result_name).to eq(exp_name)
-      expect(result_format).to eq(exp_format) 
+      expect(result_format).to eq(exp_format)
    end
   end
 end
