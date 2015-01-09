@@ -34,10 +34,10 @@ module MailAddress
     end
 
     def name
-      phrase = @phrase
-      addr   = @address
+      phrase = @phrase.dup
+      addr   = @address.dup
 
-      phrase = @comment unless !phrase.nil? && phrase.length > 0
+      phrase = @comment.dup unless !phrase.nil? && phrase.length > 0
 
       name   = Address._extract_name(phrase)
 
