@@ -28,6 +28,54 @@ describe MailAddress do
     expect(results[1].user).to eq("osaka")
   end
 
+  it "unparsable with mail gem (includes '[')" do
+    line = "Ello [Do Not Reply] <do-not-reply@ello.co>"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("\"Ello [Do Not Reply]\" <do-not-reply@ello.co>")
+    expect(results[0].address).to eq("do-not-reply@ello.co")
+    expect(results[0].name).to    eq("Ello")
+    expect(results[0].phrase).to  eq("Ello [Do Not Reply]")
+    expect(results[0].comment).to eq("")
+    expect(results[0].host).to    eq("ello.co")
+    expect(results[0].user).to    eq("do-not-reply")
+  end
+
+  it "unparsable with mail gem (no whitespace before <)" do
+    line = "大阪 太郎<osaka@example.jp>"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("\"大阪 太郎\" <osaka@example.jp>")
+    expect(results[0].address).to eq("osaka@example.jp")
+    expect(results[0].name).to    eq("大阪 太郎")
+    expect(results[0].comment).to eq("")
+    expect(results[0].phrase).to  eq("大阪 太郎")
+    expect(results[0].host).to    eq("example.jp")
+    expect(results[0].user).to    eq("osaka")
+  end
+
+  it "unparsable with mail gem (???)" do
+    line = "大阪 太郎(ABC XYZ) <osaka@example.com>"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("\"大阪 太郎\" <osaka@example.com> (ABC XYZ)")
+    expect(results[0].address).to eq("osaka@example.com")
+    expect(results[0].name).to    eq("大阪 太郎")
+    expect(results[0].comment).to eq("(ABC XYZ)")
+    expect(results[0].phrase).to  eq("大阪 太郎")
+    expect(results[0].host).to    eq("example.com")
+    expect(results[0].user).to    eq("osaka")
+  end
+
+  it "unparsable with mail gem (???)" do
+    line = "大阪 太郎 <osaka@example.jp> (日本)"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("\"大阪 太郎\" <osaka@example.jp> (日本)")
+    expect(results[0].address).to eq("osaka@example.jp")
+    expect(results[0].name).to    eq("大阪 太郎")
+    expect(results[0].comment).to eq("(日本)")
+    expect(results[0].phrase).to  eq("大阪 太郎")
+    expect(results[0].host).to    eq("example.jp")
+    expect(results[0].user).to    eq("osaka")
+  end
+
   it 'Perl Module Pod test data' do
 
     data = [
@@ -165,11 +213,11 @@ describe MailAddress do
         'Foo; Bar']
     ]
 
-    data.each do |d|
+    data.each_with_index do |d, i|
       test_src = d[0]
       exp_format = d[1]
       exp_name = d[2]
-      p test_src
+      p "#{i} #{test_src}"
       result = MailAddress.parse(test_src)[0]
 
       result_format = result.format || ""
