@@ -76,8 +76,19 @@ describe MailAddress do
     expect(results[0].user).to    eq("osaka")
   end
 
-  it 'Perl Module Pod test data' do
+  it "no address" do
+    line = "localpartonly"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("localpartonly")
+    expect(results[0].address).to eq("localpartonly")
+    expect(results[0].name).to    be_nil
+    expect(results[0].comment).to eq("")
+    expect(results[0].phrase).to  eq("")
+    expect(results[0].host).to    be_nil
+    expect(results[0].user).to    eq("localpartonly")
+  end
 
+  it 'Perl Module Pod test data' do
     data = [
       [ '"Joe & J. Harvey" <ddd @Org>, JJV @ BBN',
         '"Joe & J. Harvey" <ddd@Org>',
