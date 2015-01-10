@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kizashi Nagata"]
   spec.email         = ["kizashi1122@gmail.com"]
   spec.summary       = %q{Simple Mail Address Parser}
-  spec.description   = %q{This library is implemented based on Perl Module Mail::Address.}
+  spec.description   = %q{A practical mail address parser implemented based on Perl Module Mail::Address.}
   spec.homepage      = "https://github.com/kizashi1122/mail_address"
   spec.license       = "MIT"
 
