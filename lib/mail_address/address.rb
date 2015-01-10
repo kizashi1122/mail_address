@@ -60,14 +60,13 @@ module MailAddress
     def host
       addr = @address || '';
       i = addr.rindex('@')
-      i >= 0 ? addr[i + 1 .. -1] : nil
+      i.nil? ? nil : addr[i + 1 .. -1]
     end
-
 
     def user
       addr = @address || '';
       i = addr.rindex('@')
-      i >= 0 ? addr[0 ... i] : addr
+      i.nil? ? addr : addr[0 ... i]
     end
 
     private
