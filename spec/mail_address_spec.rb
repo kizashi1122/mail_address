@@ -88,6 +88,18 @@ describe MailAddress do
     expect(results[0].user).to    eq("localpartonly")
   end
 
+  it "specify mime-encoded address" do
+    line = "=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?= <osaka@example.jp>"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?= <osaka@example.jp>")
+    expect(results[0].address).to eq("osaka@example.jp")
+    expect(results[0].name).to    be_nil
+    expect(results[0].comment).to eq("")
+    expect(results[0].phrase).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?=")
+    expect(results[0].host).to    eq("example.jp")
+    expect(results[0].user).to    eq("osaka")
+  end
+
   it 'Perl Module Pod test data' do
     data = [
       [ '"Joe & J. Harvey" <ddd @Org>, JJV @ BBN',
