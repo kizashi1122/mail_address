@@ -45,6 +45,25 @@ describe MailAddress do
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
 
+    line = 'Amazon.co.jp アソシエイト・プログラム <associates@amazon.co.jp>'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"Amazon.co.jp アソシエイト・プログラム" <associates@amazon.co.jp>')
+    expect(results[0].address).to eq('associates@amazon.co.jp')
+    expect(results[0].name).to eq("Amazon.co.jp アソシエイト・プログラム")
+    expect(results[0].phrase).to eq("Amazon.co.jp アソシエイト・プログラム")
+    expect(results[0].host).to eq("amazon.co.jp")
+    expect(results[0].user).to eq('associates')
+
+    # name (includes parens) + <address>
+    line = 'Example (Twitterより) <notify@twitter.com>'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"Example (Twitterより)" <notify@twitter.com>')
+    expect(results[0].address).to eq('notify@twitter.com')
+    expect(results[0].name).to eq("Example (Twitterより)")
+    expect(results[0].phrase).to eq("Example (Twitterより)")
+    expect(results[0].host).to eq("twitter.com")
+    expect(results[0].user).to eq('notify')
+
     # name + <address> (multi byte) name is quoted
     line = '"ジョン ドゥ" <johndoe@example.com>'
     results = MailAddress.parse(line)
@@ -62,6 +81,16 @@ describe MailAddress do
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq("John Doe")
     expect(results[0].phrase).to eq("(John Doe)")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('johndoe')
+
+    # address + (note) # nested paren
+    line = 'johndoe@example.com (John (Mid) Doe)'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('johndoe@example.com (John (Mid) Doe)')
+    expect(results[0].address).to eq('johndoe@example.com')
+    expect(results[0].name).to eq("John (Mid) Doe")
+    expect(results[0].phrase).to eq("(John (Mid) Doe)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
 
@@ -113,7 +142,6 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John ( Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
-
 
     # "address1" <address2>
     line = '"michael@example.jp" <johndoe@example.com>'
@@ -279,6 +307,19 @@ describe MailAddress do
       expect(results[0].user).to    eq("")
     end
 
+  end
+
+
+  it "corrupted address" do
+    line = 'john <john@example.com' # lack of right angle bracket
+    expect {
+      results = MailAddress.parse(line)
+    }.to raise_error(StandardError)
+
+    line = 'john <john@example.com> (last' # lack of right parenthesis
+    expect {
+      results = MailAddress.parse(line)
+    }.to raise_error(StandardError)
   end
 
   it 'Perl Module Pod test data' do
