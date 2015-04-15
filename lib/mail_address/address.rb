@@ -28,13 +28,6 @@ module MailAddress
       elsif !@address.nil? && @address.length > 0 then
         addr.push(@address)
       end
-
-      # if (!@comment.nil? && @comment.match(/\S/)) then
-      #   @comment.sub!(/^\s*\(?/, '(')
-      #   @comment.sub!(/\)?\s*$/, ')')
-      # end
-
-      # addr.push(@comment) if !@comment.nil? && @comment.length > 0
       addr.join(' ')
     end
 

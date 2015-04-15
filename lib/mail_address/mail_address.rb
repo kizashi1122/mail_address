@@ -22,7 +22,6 @@ module MailAddress
       substr = token[0, 1]
 
       if (substr == '(' && !address.empty?) then
-        # comment.push(token)
         end_paren_idx = _find_next_paren(idx, tokens, len)
         rem = tokens[idx .. end_paren_idx]
         phrase.push(rem.join(''))
@@ -48,11 +47,6 @@ module MailAddress
         address.push(token)
       else
         phrase.push(token)
-        # raise "Unmatched '<>' in line" if depth > 0
-        # o = _complete(phrase, address, comment)
-        # objs.push(o) if o
-        # depth = 0
-        # address.push(token)
       end
     end
     objs
@@ -69,29 +63,6 @@ module MailAddress
 
     while (line != '')
       field = ''
-      # if ( line.sub!(/^\s*\(/, '(') )    # (...)
-      #   depth = 0
-
-      #   catch :PAREN do
-      #     while line.sub!(/\A(\(([^\(\)\\]|\\.)*)/, '') do
-      #       field << $1
-      #       depth += 1
-      #       while line.sub!(/\A(([^\(\)\\]|\\.)*\)\s*)/, '') do
-      #         field << $1
-      #         depth -= 1
-      #         throw :PAREN if depth == 0
-      #         field << $1 if line.sub!(/\A(([^\(\)\\]|\\.)+)/, '')
-      #       end
-      #     end
-      #   end
-      #   raise "Unmatched () '#{field}' '#{line}'" if depth > 0
-
-      #   field.sub!(/\s+\Z/, '')
-      #   words.push(field)
-
-      #   next
-      # end
-
       tmp = nil
       if (
           line.sub!(/\A("(?:[^"\\]+|\\.)*")(\s*)/, '')      || # "..."

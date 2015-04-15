@@ -125,7 +125,6 @@ describe MailAddress do
     expect(results[0].format).to eq("John 'M' Doe <john@example.com>")
     expect(results[0].address).to eq("john@example.com")
     expect(results[0].name).to eq("John 'M' Doe")
-#    expect(results[0].comment).to eq("(this is a comment)")
     expect(results[0].phrase).to eq("John 'M' Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq("john")
@@ -135,7 +134,6 @@ describe MailAddress do
     expect(results[1].format).to eq("\"大阪 太郎\" <osaka@example.jp>")
     expect(results[1].address).to eq("osaka@example.jp")
     expect(results[1].name).to eq("大阪 太郎")
-#    expect(results[1].comment).to eq("")
     expect(results[1].phrase).to eq("大阪 太郎")
     expect(results[1].host).to eq("example.jp")
     expect(results[1].user).to eq("osaka")
@@ -172,7 +170,6 @@ describe MailAddress do
     expect(results[0].address).to eq("do-not-reply@ello.co")
     expect(results[0].name).to    eq("Ello")
     expect(results[0].phrase).to  eq("Ello [Do Not Reply]")
-    expect(results[0].comment).to eq("")
     expect(results[0].host).to    eq("ello.co")
     expect(results[0].user).to    eq("do-not-reply")
   end
@@ -183,7 +180,6 @@ describe MailAddress do
     expect(results[0].format).to  eq("\"大阪 太郎\" <osaka@example.jp>")
     expect(results[0].address).to eq("osaka@example.jp")
     expect(results[0].name).to    eq("大阪 太郎")
-#    expect(results[0].comment).to eq("")
     expect(results[0].phrase).to  eq("大阪 太郎")
     expect(results[0].host).to    eq("example.jp")
     expect(results[0].user).to    eq("osaka")
@@ -195,7 +191,6 @@ describe MailAddress do
     expect(results[0].format).to  eq("localpartonly")
     expect(results[0].address).to eq("localpartonly")
     expect(results[0].name).to    be_nil
-    expect(results[0].comment).to eq("")
     expect(results[0].phrase).to  eq("")
     expect(results[0].host).to    be_nil
     expect(results[0].user).to    eq("localpartonly")
@@ -207,7 +202,6 @@ describe MailAddress do
     expect(results[0].format).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?= <osaka@example.jp>")
     expect(results[0].address).to eq("osaka@example.jp")
     expect(results[0].name).to    be_nil
-    expect(results[0].comment).to eq("")
     expect(results[0].phrase).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?=")
     expect(results[0].host).to    eq("example.jp")
     expect(results[0].user).to    eq("osaka")
