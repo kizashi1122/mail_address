@@ -32,7 +32,7 @@ module MailAddress
 
     def name
       phrase = @phrase.dup
-      addr   = @address.dup
+      addr   = @address ? @address.dup : ""
 
       name   = Address._extract_name(phrase)
 

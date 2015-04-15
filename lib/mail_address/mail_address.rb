@@ -5,6 +5,16 @@ module MailAddress
     lines = addresses.grep(String)
     line = lines.join('')
 
+    # undisclosed-recipient
+    if line.match(/undisclosed[ \-]recipients?: ?;?/i)
+      return [ MailAddress::Address.new(line, nil) ]
+    end
+
+    # obviously invalid email address
+    unless line.match(/[a-z0-9\.\-"_\+]@/i)
+      return [ MailAddress::Address.new(line, nil) ]
+    end
+
     phrase, address, objs = [], [], []
     depth, idx, end_paren_idx = 0, 0, 0
 

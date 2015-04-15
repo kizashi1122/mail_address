@@ -5,7 +5,6 @@ require 'pp'
 describe MailAddress do
 
   it "normal case (commonly used)" do
-
     # address only
     line = 'johndoe@example.com'
     results = MailAddress.parse(line)
@@ -194,15 +193,63 @@ describe MailAddress do
     expect(results[0].user).to    eq("osaka")
   end
 
-  it "no address" do
+  it "local part only" do
+    # if local part only, do not treat as an email address
     line = "localpartonly"
     results = MailAddress.parse(line)
     expect(results[0].format).to  eq("localpartonly")
-    expect(results[0].address).to eq("localpartonly")
-    expect(results[0].name).to    be_nil
-    expect(results[0].phrase).to  eq("")
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to    eq("localpartonly")
+    expect(results[0].phrase).to  eq("localpartonly")
     expect(results[0].host).to    be_nil
-    expect(results[0].user).to    eq("localpartonly")
+    expect(results[0].user).to    eq("")
+  end
+
+  it "a lot of types of undisclosed recipients" do
+    array = [
+      'undisclosed-recipients: ;',
+      'undisclosed-recipients:;',
+      'undisclosed recipients: ;',
+      'Undisclosed recipients: ;',
+      'Undisclosed recipients:;',
+      'Undisclosed-recipients: ;',
+      'Undisclosed-recipients:;',
+    ]
+
+    array.each do |line|
+      results = MailAddress.parse(line)
+      expect(results[0].format).to  eq(%Q("#{line}"))
+      expect(results[0].address).to be_nil
+      expect(results[0].name).to    eq(line)
+      expect(results[0].phrase).to  eq(line)
+      expect(results[0].host).to    be_nil
+      expect(results[0].user).to    eq("")
+    end
+
+    array = [
+      '<"Undisclosed-Recipient:;"@587.jah.ne.jp>',
+      '<"Undisclosed-Recipient:"@nifty.com;>',
+    ]
+
+    array.each do |line|
+      results = MailAddress.parse(line)
+      expect(results[0].format).to  eq(line)
+      expect(results[0].address).to be_nil
+      expect(results[0].name).to    eq(line)
+      expect(results[0].phrase).to  eq(line)
+      expect(results[0].host).to    be_nil
+      expect(results[0].user).to    eq("")
+    end
+
+    # valid address
+    line = '"Undisclosed" <"recipients:"@nifty.com>'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq(line)
+    expect(results[0].address).to eq('"recipients:"@nifty.com')
+    expect(results[0].name).to    eq("Undisclosed")
+    expect(results[0].phrase).to  eq('"Undisclosed"')
+    expect(results[0].host).to    eq("nifty.com")
+    expect(results[0].user).to    eq('"recipients:"')
   end
 
   it "specify mime-encoded address" do
@@ -214,6 +261,24 @@ describe MailAddress do
     expect(results[0].phrase).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?=")
     expect(results[0].host).to    eq("example.jp")
     expect(results[0].user).to    eq("osaka")
+  end
+
+  it "obviously invalid address (has no '@')" do
+    array = [
+      'recipient list not shown: ;',
+      '各位:;'
+    ]
+
+    array.each do |line|
+      results = MailAddress.parse(line)
+      expect(results[0].format).to  eq(%Q("#{line}"))
+      expect(results[0].address).to be_nil
+      expect(results[0].name).to    eq(line)
+      expect(results[0].phrase).to  eq(line)
+      expect(results[0].host).to    be_nil
+      expect(results[0].user).to    eq("")
+    end
+
   end
 
   xit 'Perl Module Pod test data' do
