@@ -33,6 +33,7 @@ module MailAddress
 
       if (substr == '(' && !address.empty?) then
         end_paren_idx = _find_next_paren(idx, tokens, len)
+        raise "cannot find end paren" if end_paren_idx == -1 # end paren must exists after address
         rem = tokens[idx .. end_paren_idx]
         phrase.push(rem.join(''))
       elsif (substr == '<') then
@@ -92,7 +93,7 @@ module MailAddress
 
   def self._find_next(idx, tokens, len)
     while (idx < len)
-      c = tokens[idx]
+      c = tokens[idx].strip
       return c if c == ',' || c == ';' || c == '<'
       idx += 1
     end
