@@ -14,22 +14,27 @@ module MailAddress
     def format
       addr = []
       if !@phrase.nil? && @phrase.length > 0 then
-        addr.push(
-          @phrase.match(/^(?:\s*#{ATEXT}\s*)+$/) ? @phrase
-          : @phrase.match(/(?<!\\)"/)            ? @phrase
-          : %Q("#{@phrase}")
-          )
-        addr.push "<#{@address}>" if !@address.nil? && @address.length > 0
+        if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
+          addr.push(@address) if !@address.nil? && @address.length > 0
+          addr.push(@phrase)
+        else
+          addr.push(
+            @phrase.match(/^(?:\s*#{ATEXT}\s*)+$/) ? @phrase
+            : @phrase.match(/(?<!\\)"/)            ? @phrase
+            : %Q("#{@phrase}")
+            )
+          addr.push "<#{@address}>" if !@address.nil? && @address.length > 0
+        end
       elsif !@address.nil? && @address.length > 0 then
         addr.push(@address)
       end
 
-      if (!@comment.nil? && @comment.match(/\S/)) then
-        @comment.sub!(/^\s*\(?/, '(')
-        @comment.sub!(/\)?\s*$/, ')')
-      end
+      # if (!@comment.nil? && @comment.match(/\S/)) then
+      #   @comment.sub!(/^\s*\(?/, '(')
+      #   @comment.sub!(/\)?\s*$/, ')')
+      # end
 
-      addr.push(@comment) if !@comment.nil? && @comment.length > 0
+      # addr.push(@comment) if !@comment.nil? && @comment.length > 0
       addr.join(' ')
     end
 
