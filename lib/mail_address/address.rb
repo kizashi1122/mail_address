@@ -84,21 +84,8 @@ module MailAddress
 
       name.sub!(/^\((.*)\)$/, '\1') # remove outermost parenthesis
       name.sub!(/^"(.*)"$/, '\1')   # remove outer quotation marks
-      name.gsub!(/\(.*?\)/, '')     # remove minimal embedded comments
       name.gsub!(/\\/, '')          # remove all escapes
       name.sub!(/^"(.*)"$/, '\1')   # remove internal quotation marks
-      name.sub!(/^([^\s]+) ?, ?(.*)$/, '\2 \1') # reverse "Last, First M." if applicable
-      name.sub!(/,.*/, '')
-
-      # Change casing only when the name contains only upper or only
-      # lower cased characters.
-      unless ( name.match(/[A-Z]/) && name.match(/[a-z]/) ) then
-        # Set the case of the name to first char upper rest lower
-        name.gsub!(/\b(\w+)/io) {|w| $1.capitalize }  # Upcase first letter on name
-        name.gsub!(/\bMc(\w)/io) { |w| "Mc#{$1.capitalize}" } # Scottish names such as 'McLeod'
-        name.gsub!(/\bo'(\w)/io) { |w| "O'#{$1.capitalize}" } # Irish names such as 'O'Malley, O'Reilly'
-        name.gsub!(/\b(x*(ix)?v*(iv)?i*)\b/io) { |w| $1.upcase } # Roman numerals, eg 'Level III Support'
-      end
 
       # some cleanup
       name.gsub!(/\[[^\]]*\]/, '')

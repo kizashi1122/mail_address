@@ -76,12 +76,21 @@ describe MailAddress do
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
 
+    line = 'johndoe@example.com (John, Doe)'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('johndoe@example.com (John, Doe)')
+    expect(results[0].address).to eq('johndoe@example.com')
+    expect(results[0].name).to eq("John, Doe")
+    expect(results[0].phrase).to eq("(John, Doe)")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('johndoe')
+
     # name + <address> + (note)
     line = 'John Doe <johndoe@example.com> (Extra)'
     results = MailAddress.parse(line)
     expect(results[0].format).to eq('"John Doe (Extra)" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
-    expect(results[0].name).to eq("John Doe")
+    expect(results[0].name).to eq("John Doe (Extra)")
     expect(results[0].phrase).to eq("John Doe (Extra)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
@@ -108,14 +117,14 @@ describe MailAddress do
 
 
     # "address1" <address2>
-    # line = '"michael@example.jp" <johndoe@example.com>'
-    # results = MailAddress.parse(line)
-    # expect(results[0].format).to eq('"michael@example.jp" <johndoe@example.com>')
-    # expect(results[0].address).to eq('johndoe@example.com')
-    # expect(results[0].name).to eq("michael@example.jp")
-    # expect(results[0].phrase).to eq("michael@example.jp")
-    # expect(results[0].host).to eq("example.com")
-    # expect(results[0].user).to eq('johndoe')
+    line = '"michael@example.jp" <johndoe@example.com>'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"michael@example.jp" <johndoe@example.com>')
+    expect(results[0].address).to eq('johndoe@example.com')
+    expect(results[0].name).to eq("michael@example.jp")
+    expect(results[0].phrase).to eq('"michael@example.jp"')
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('johndoe')
   end
 
   it "normal case (multiple address)" do
