@@ -5,7 +5,7 @@ module MailAddress
     lines = addresses.grep(String)
     line = lines.join('')
 
-    phrase, comment, address, objs = [], [], [], []
+    phrase, address, objs = [], [], []
     depth, idx, end_paren_idx = 0, 0, 0
 
     tokens = _tokenize lines
@@ -31,7 +31,7 @@ module MailAddress
         depth -= 1 if depth > 0
       elsif (substr == ',' || substr == ';') then
         raise "Unmatched '<>' in line" if depth > 0
-        o = _complete(phrase, address, comment)
+        o = _complete(phrase, address)
 
         objs.push(o) if o
         depth = 0
@@ -99,10 +99,10 @@ module MailAddress
     -1
   end
 
-  def self._complete (phrase, address, comment)
-    phrase.length > 0 || comment.length > 0 || address.length > 0 or return nil
-    new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''), comment.join(' '))
-    phrase.clear; address.clear; comment.clear
+  def self._complete (phrase, address)
+    phrase.length > 0 || address.length > 0 or return nil
+    new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''))
+    phrase.clear; address.clear
     new_address
   end
 

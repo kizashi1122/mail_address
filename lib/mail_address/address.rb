@@ -2,12 +2,11 @@ module MailAddress
 
   class Address
 
-    def initialize(phrase, address, comment)
+    def initialize(phrase, address)
       @phrase = phrase
       @address = address
-      @comment = comment
     end
-    attr_accessor :phrase, :address, :comment
+    attr_accessor :phrase, :address
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
 
@@ -34,8 +33,6 @@ module MailAddress
     def name
       phrase = @phrase.dup
       addr   = @address.dup
-
-      phrase = @comment.dup unless !phrase.nil? && phrase.length > 0
 
       name   = Address._extract_name(phrase)
 
