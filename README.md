@@ -50,6 +50,7 @@ p addrs[0].name       # "John 'M' Doe (this is a comment)"
 p addrs[0].phrase     # "John 'M' Doe (this is a comment)"
 p addrs[0].host       # "example.com"
 p addrs[0].user       # "john"
+p addrs[0].original   # "John 'M' Doe <john@example.com> (this is a comment)"
 
 p addrs[1].format     # "\"大阪 太郎\" <osaka@example.jp>"
 p addrs[1].address    # "osaka@example.jp"
@@ -57,6 +58,7 @@ p addrs[1].name       # "大阪 太郎"
 p addrs[1].phrase     # "大阪 太郎"
 p addrs[1].host       # "example.jp"
 p addrs[1].user       # "osaka"
+p addrs[1].original   # "大阪 太郎 <osaka@example.jp>"
 ```
 `address.name` and `address.phrase` are almost same. 
 `address.phrase` keeps outermost double quotes or parentheses.
