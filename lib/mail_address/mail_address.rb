@@ -7,15 +7,16 @@ module MailAddress
 
     # undisclosed-recipient
     if line.match(/undisclosed[ \-]recipients?: ?;?/i)
-      return [ MailAddress::Address.new(line, nil) ]
+      return [ MailAddress::Address.new(line, nil, line) ]
     end
 
     # obviously invalid email address
     unless line.match(/[a-z0-9\.\-"_\+]@/i)
-      return [ MailAddress::Address.new(line, nil) ]
+      return [ MailAddress::Address.new(line, nil, line) ]
     end
 
     phrase, address, objs = [], [], []
+    original = ''
     depth, idx, end_paren_idx = 0, 0, 0
 
     tokens = _tokenize lines
@@ -24,12 +25,13 @@ module MailAddress
 
     for idx in 0 ... len do
 
+      token = tokens[idx]
+      substr = token[0, 1]
+      original << token
+
       if (end_paren_idx > 0 && end_paren_idx >= idx)
         next
       end
-
-      token = tokens[idx]
-      substr = token[0, 1]
 
       if (substr == '(' && !address.empty?) then
         end_paren_idx = _find_next_paren(idx, tokens, len)
@@ -42,11 +44,15 @@ module MailAddress
         depth -= 1 if depth > 0
       elsif (substr == ',' || substr == ';') then
         raise "Unmatched '<>' in line" if depth > 0
-        o = _complete(phrase, address)
+
+        original.sub!(/[,;]\s*\z/, '')
+
+        o = _complete(phrase, address, original)
 
         objs.push(o) if o
         depth = 0
         end_paren_idx = 0
+        original = ''
         _next = _find_next idx+1, tokens, len
       elsif (depth > 0) then
         token.strip!
@@ -110,9 +116,9 @@ module MailAddress
     -1
   end
 
-  def self._complete (phrase, address)
+  def self._complete (phrase, address, original)
     phrase.length > 0 || address.length > 0 or return nil
-    new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''))
+    new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''), original)
     phrase.clear; address.clear
     new_address
   end

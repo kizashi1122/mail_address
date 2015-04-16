@@ -14,6 +14,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # <address> only
     line = '<johndoe@example.com>'
@@ -24,6 +25,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # name + <address> (single byte only)
     line = 'John Doe <johndoe@example.com>'
@@ -34,6 +36,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # name + <address> (multi byte)
     line = 'ジョン ドゥ <johndoe@example.com>'
@@ -44,6 +47,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("ジョン ドゥ")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     line = 'Amazon.co.jp アソシエイト・プログラム <associates@amazon.co.jp>'
     results = MailAddress.parse(line)
@@ -53,6 +57,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("Amazon.co.jp アソシエイト・プログラム")
     expect(results[0].host).to eq("amazon.co.jp")
     expect(results[0].user).to eq('associates')
+    expect(results[0].original).to eq(line)
 
     # name (includes parens) + <address>
     line = 'Example (Twitterより) <notify@twitter.com>'
@@ -63,6 +68,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("Example (Twitterより)")
     expect(results[0].host).to eq("twitter.com")
     expect(results[0].user).to eq('notify')
+    expect(results[0].original).to eq(line)
 
     # name + <address> (multi byte) name is quoted
     line = '"ジョン ドゥ" <johndoe@example.com>'
@@ -73,6 +79,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq('"ジョン ドゥ"')
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # address + (note)
     line = 'johndoe@example.com (John Doe)'
@@ -83,6 +90,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("(John Doe)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # address + (note) # nested paren
     line = 'johndoe@example.com (John (Mid) Doe)'
@@ -93,6 +101,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("(John (Mid) Doe)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # address + (note) # note has special char
     line = 'johndoe@example.com (John@Doe)'
@@ -103,6 +112,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("(John@Doe)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     line = 'johndoe@example.com (John, Doe)'
     results = MailAddress.parse(line)
@@ -112,6 +122,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("(John, Doe)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # name + <address> + (note)
     line = 'John Doe <johndoe@example.com> (Extra)'
@@ -122,6 +133,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John Doe (Extra)")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # name + <address> (name has starting paren but doesn't have ending paren)
     line = 'John(Doe <johndoe@example.com>'
@@ -132,6 +144,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John(Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # ditto
     line = 'John ( Doe <johndoe@example.com>'
@@ -142,6 +155,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John ( Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
 
     # "address1" <address2>
     line = '"michael@example.jp" <johndoe@example.com>'
@@ -152,6 +166,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq('"michael@example.jp"')
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('johndoe')
+    expect(results[0].original).to eq(line)
   end
 
   it "normal case (multiple address)" do
@@ -164,6 +179,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John 'M' Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq("john")
+    expect(results[0].original).to eq("John 'M' Doe <john@example.com>")
 
     # Perl module Mail::Address returns '大阪 太郎 <osaka@example.jp>' (no double quote)
     # because regular expression \w matches even multibyte characters.
@@ -173,6 +189,7 @@ describe MailAddress do
     expect(results[1].phrase).to eq("大阪 太郎")
     expect(results[1].host).to eq("example.jp")
     expect(results[1].user).to eq("osaka")
+    expect(results[1].original).to eq('大阪 太郎 <osaka@example.jp>')
   end
 
   it "normal case (rfc-violated(RFC822) but commonly used in AU/DoCoMo)" do
@@ -186,6 +203,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('"johndoe."')
+    expect(results[0].original).to eq(line)
 
     # contains '..'
     line = 'John Doe <"john..doe"@example.com>'
@@ -197,6 +215,7 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('"john..doe"')
+    expect(results[0].original).to eq(line)
   end
 
   it "unparsable with mail gem (includes non-permitted char'[')" do
@@ -208,6 +227,7 @@ describe MailAddress do
     expect(results[0].phrase).to  eq("Ello [Do Not Reply]")
     expect(results[0].host).to    eq("ello.co")
     expect(results[0].user).to    eq("do-not-reply")
+    expect(results[0].original).to eq(line)
   end
 
   it "unparsable with mail gem (no whitespace before <)" do
@@ -219,6 +239,7 @@ describe MailAddress do
     expect(results[0].phrase).to  eq("大阪 太郎")
     expect(results[0].host).to    eq("example.jp")
     expect(results[0].user).to    eq("osaka")
+    expect(results[0].original).to eq(line)
   end
 
   it "local part only" do
@@ -231,6 +252,7 @@ describe MailAddress do
     expect(results[0].phrase).to  eq("localpartonly")
     expect(results[0].host).to    be_nil
     expect(results[0].user).to    eq("")
+    expect(results[0].original).to eq(line)
   end
 
   it "a lot of types of undisclosed recipients" do
@@ -252,6 +274,7 @@ describe MailAddress do
       expect(results[0].phrase).to  eq(line)
       expect(results[0].host).to    be_nil
       expect(results[0].user).to    eq("")
+      expect(results[0].original).to eq(line)
     end
 
     array = [
@@ -267,9 +290,10 @@ describe MailAddress do
       expect(results[0].phrase).to  eq(line)
       expect(results[0].host).to    be_nil
       expect(results[0].user).to    eq("")
+      expect(results[0].original).to eq(line)
     end
 
-    # valid address
+    # a seemingly valid address
     line = '"Undisclosed" <"recipients:"@nifty.com>'
     results = MailAddress.parse(line)
     expect(results[0].format).to  eq(line)
@@ -278,6 +302,7 @@ describe MailAddress do
     expect(results[0].phrase).to  eq('"Undisclosed"')
     expect(results[0].host).to    eq("nifty.com")
     expect(results[0].user).to    eq('"recipients:"')
+    expect(results[0].original).to eq(line)
   end
 
   it "specify mime-encoded address" do
@@ -289,6 +314,7 @@ describe MailAddress do
     expect(results[0].phrase).to  eq("=?ISO-2022-JP?B?GyRCQmc6ZRsoQiAbJEJCQE86GyhC?=")
     expect(results[0].host).to    eq("example.jp")
     expect(results[0].user).to    eq("osaka")
+    expect(results[0].original).to eq(line)
   end
 
   it "obviously invalid address (has no '@')" do
@@ -305,6 +331,7 @@ describe MailAddress do
       expect(results[0].phrase).to  eq(line)
       expect(results[0].host).to    be_nil
       expect(results[0].user).to    eq("")
+      expect(results[0].original).to eq(line)
     end
 
   end

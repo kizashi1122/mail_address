@@ -2,11 +2,12 @@ module MailAddress
 
   class Address
 
-    def initialize(phrase, address)
+    def initialize(phrase, address, original)
       @phrase = phrase
       @address = address
+      @original = original
     end
-    attr_accessor :phrase, :address
+    attr_accessor :phrase, :address, :original
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
 
