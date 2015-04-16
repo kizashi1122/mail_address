@@ -334,7 +334,29 @@ describe MailAddress do
       expect(results[0].user).to    eq("")
       expect(results[0].original).to eq(line)
     end
+  end
 
+  it "empty string or nil" do
+    # empty string
+    line = ''
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq('')
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq('')
+    expect(results[0].original).to eq(line)
+    # nil
+    line = nil
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq('')
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq('')
+    expect(results[0].original).to eq('') # Note that it returns empty string NOT nil
   end
 
   it "corrupted address" do
