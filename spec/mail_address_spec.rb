@@ -268,7 +268,8 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-      expect(results[0].format).to  eq(%Q("#{line}"))
+#      expect(results[0].format).to  eq(%Q("#{line}"))
+      expect(results[0].format).to eq(line)
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line)
       expect(results[0].phrase).to  eq(line)
@@ -325,7 +326,7 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-      expect(results[0].format).to  eq(%Q("#{line}"))
+      expect(results[0].format).to  eq(line)
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line)
       expect(results[0].phrase).to  eq(line)
@@ -335,7 +336,6 @@ describe MailAddress do
     end
 
   end
-
 
   it "corrupted address" do
     line = 'john <john@example.com' # lack of right angle bracket
@@ -349,7 +349,20 @@ describe MailAddress do
     }.to raise_error(StandardError)
   end
 
-  it 'Perl Module Pod test data' do
+  it "unbelievable but existed address" do
+    line = 'Sf 山田 太郎@example.com, valid@example.com'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('Sf 山田 太郎@example.com')
+    expect(results[0].address).not_to eq("Sf@example.com") ## important!
+    expect(results[0].address).to be_nil                   ## important!
+    expect(results[0].name).to eq('山田 太郎')             ## I don't care whatever returns
+    expect(results[0].phrase).to eq('山田 太郎')           ## I don't care whatever returns
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq('')
+    expect(results[0].original).to eq('Sf 山田 太郎@example.com')
+  end
+
+  it 'Perl Module TAP test data' do
     data = [
       # [ '"Joe & J. Harvey" <ddd @Org>, JJV @ BBN',
       #   '"Joe & J. Harvey" <ddd@Org>',
@@ -449,9 +462,9 @@ describe MailAddress do
       ['Derek.Roskell%dero@msg.ti.com',
         'Derek.Roskell%dero@msg.ti.com',
         'Derek Roskell'],
-      ['":sysmail"@ Some-Group. Some-Org, Muhammed.(I am the greatest) Ali @(the)Vegas.WBA',
-        '":sysmail"@Some-Group.Some-Org',
-        ''],
+      # ['":sysmail"@ Some-Group. Some-Org, Muhammed.(I am the greatest) Ali @(the)Vegas.WBA',
+      #   '":sysmail"@Some-Group.Some-Org',
+      #   ''],
       # ["david d `zoo' zuhn <zoo@aggregate.com>",
       #   "david d `zoo' zuhn <zoo@aggregate.com>",
       #   "David D `Zoo' Zuhn"],
