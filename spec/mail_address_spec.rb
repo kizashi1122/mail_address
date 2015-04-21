@@ -170,7 +170,7 @@ describe MailAddress do
   end
 
   it "normal case (multiple address)" do
-    line = "John 'M' Doe <john@example.com>, 大阪 太郎 <osaka@example.jp>"
+    line = "John 'M' Doe <john@example.com>, 大阪 太郎 <osaka@example.jp>, localpartonly"
     results = MailAddress.parse(line)
 
     expect(results[0].format).to eq("John 'M' Doe <john@example.com>")
@@ -190,6 +190,14 @@ describe MailAddress do
     expect(results[1].host).to eq("example.jp")
     expect(results[1].user).to eq("osaka")
     expect(results[1].original).to eq('大阪 太郎 <osaka@example.jp>')
+
+    expect(results[2].format).to  eq("localpartonly")
+    expect(results[2].address).to be_nil
+    expect(results[2].name).to    eq("localpartonly")
+    expect(results[2].phrase).to  eq("localpartonly")
+    expect(results[2].host).to    be_nil
+    expect(results[2].user).to    eq("")
+    expect(results[2].original).to eq("localpartonly")
   end
 
   it "normal case (rfc-violated(RFC822) but commonly used in AU/DoCoMo)" do

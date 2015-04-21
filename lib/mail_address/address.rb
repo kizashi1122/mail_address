@@ -5,14 +5,21 @@ module MailAddress
     attr_accessor :phrase, :address, :original
 
     def initialize(phrase, address, original)
-      # validate
-      if address.nil? || original.include?(address)
-        @address = address
-      else
-        @address = nil # wrongly constructed address
-      end
+
+      @address = address
       @phrase = phrase
       @original = original
+
+      ###  validate afterwords
+      # parse failed or invalid address
+      unless (@address && @original.include?(@address)) && Address._check_address_with_regex(@address)
+        @address = nil
+      end
+
+      # invalid address
+      if @address.nil? && (phrase.nil? || phrase == "")
+        @phrase = original
+      end
     end
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
@@ -85,6 +92,13 @@ module MailAddress
       name.gsub!(/(^[\s'"]+|[\s'"]+$)/, '')
       name.gsub!(/\s{2,}/, ' ')
       name
+    end
+
+    # check if the address is compliant with RFC2822
+    def self._check_address_with_regex(email_address)
+      return nil unless email_address
+      # regex check (see  http://blog.livedoor.jp/dankogai/archives/51189905.html)
+      email_address.match(/^(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+))*)|(?:"(?:\\[^\r\n]|[^\\"])*")))\@(?:(?:(?:(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+)(?:\.(?:[a-zA-Z0-9_!#\$\%&'*+\/=?\^`{}~|\-]+))*)|(?:\[(?:\\\S|[\x21-\x5a\x5e-\x7e])*\])))$/)
     end
 
   end

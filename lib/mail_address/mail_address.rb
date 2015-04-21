@@ -10,7 +10,7 @@ module MailAddress
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 
-    # obviously invalid email address
+    # obviously all email address(es) are invalid
     unless line.match(/[a-z0-9\.\-"_\+]@/i)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
