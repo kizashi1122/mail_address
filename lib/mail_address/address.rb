@@ -2,18 +2,24 @@ module MailAddress
 
   class Address
 
-    def initialize(phrase, address_, original)
+    attr_accessor :phrase, :address, :original
+
+    def initialize(phrase, address, original)
+      # validate
+      if address.nil? || original.include?(address)
+        @address = address
+      else
+        @address = nil # wrongly constructed address
+      end
       @phrase = phrase
-      @address = address_
       @original = original
     end
-    attr_accessor :phrase, :original
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
 
     def format
       addr = []
-      return @original if address.nil?
+      return @original if @address.nil?
 
       if !@phrase.nil? && @phrase.length > 0 then
         if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
@@ -39,23 +45,14 @@ module MailAddress
       name.length > 0 ? name : nil
     end
 
-    def address
-      # double check
-      if @address.nil? || @original.include?(@address)
-        @address
-      else
-        nil # wrongly constructed address
-      end
-    end
-
     def host
-      addr = address || '';
+      addr = @address || '';
       i = addr.rindex('@')
       i.nil? ? nil : addr[i + 1 .. -1]
     end
 
     def user
-      addr = address || '';
+      addr = @address || '';
       i = addr.rindex('@')
       i.nil? ? addr : addr[0 ... i]
     end
