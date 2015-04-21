@@ -35,23 +35,7 @@ module MailAddress
 
     def name
       phrase = @phrase.dup
-      addr   = @address ? @address.dup : ""
-
       name   = Address._extract_name(phrase)
-
-      # first.last@domain address
-      if (name == '') && (md = addr.match(/([^\%\.\@_]+([\._][^\%\.\@_]+)+)[\@\%]/)) then
-        name = md[1]
-        name.gsub!(/[\._]+/, ' ')
-        name = Address._extract_name name
-      end
-      
-      if (name == '' && addr.match(%r{/g=}i)) then   # X400 style address
-        f = addr.match(%r{g=([^/]*)}i)
-        l = addr.match(%r{s=([^/]*)}i)
-        name = Address._extract_name "#{f[1]} #{l[1]}"
-      end
-
       name.length > 0 ? name : nil
     end
 

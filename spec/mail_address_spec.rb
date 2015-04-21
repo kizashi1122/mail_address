@@ -359,6 +359,28 @@ describe MailAddress do
     expect(results[0].original).to eq('') # Note that it returns empty string NOT nil
   end
 
+  it "suppress too much extraction" do
+    line = 'john_doe@example.com'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('john_doe@example.com')
+    expect(results[0].address).to eq('john_doe@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq('')
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('john_doe')
+    expect(results[0].original).to eq(line)
+
+    line = 'john.doe@example.com'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('john.doe@example.com')
+    expect(results[0].address).to eq('john.doe@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq('')
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('john.doe')
+    expect(results[0].original).to eq(line)
+  end
+
   it "corrupted address" do
     line = 'john <john@example.com' # lack of right angle bracket
     expect {
@@ -466,9 +488,9 @@ describe MailAddress do
       ['Clive Bittlestone <clyvb@asic.sc.ti.com>',
         'Clive Bittlestone <clyvb@asic.sc.ti.com>',
         'Clive Bittlestone'],
-      ['Graham.Barr@tiuk.ti.com',
-        'Graham.Barr@tiuk.ti.com',
-        'Graham Barr'],
+      # ['Graham.Barr@tiuk.ti.com',
+      #   'Graham.Barr@tiuk.ti.com',
+      #   'Graham Barr'],
       # ['"Graham Bisset, UK Net Support, +44 224 728109"  <GRAHAM@dyce.wireline.slb.com.ti.com.>',
       #   '"Graham Bisset, UK Net Support, +44 224 728109" <GRAHAM@dyce.wireline.slb.com.ti.com.>',
       #   'Graham Bisset'],
@@ -481,9 +503,9 @@ describe MailAddress do
       # ['a909062@node_cb83.node_cb83 (Colin Maytum         (0013 bro5))',
       #   'a909062@node_cb83.node_cb83 (Colin Maytum         (0013 bro5))',
       #   'Colin Maytum'],
-      ['Derek.Roskell%dero@msg.ti.com',
-        'Derek.Roskell%dero@msg.ti.com',
-        'Derek Roskell'],
+      # ['Derek.Roskell%dero@msg.ti.com',
+      #   'Derek.Roskell%dero@msg.ti.com',
+      #   'Derek Roskell'],
       # ['":sysmail"@ Some-Group. Some-Org, Muhammed.(I am the greatest) Ali @(the)Vegas.WBA',
       #   '":sysmail"@Some-Group.Some-Org',
       #   ''],
