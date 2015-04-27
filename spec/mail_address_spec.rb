@@ -250,7 +250,7 @@ describe MailAddress do
     expect(results[0].original).to eq(line)
   end
 
-  it "local part only" do
+  it "local part only(treated as invalid)" do
     # if local part only, do not treat as an email address
     line = "localpartonly"
     results = MailAddress.parse(line)
@@ -261,6 +261,32 @@ describe MailAddress do
     expect(results[0].host).to    be_nil
     expect(results[0].user).to    eq("")
     expect(results[0].original).to eq(line)
+  end
+
+  it "includes invalid addresses only among valid addresses " do
+    line = "aaaa, xyz@example.com, bbbb"
+    results = MailAddress.parse(line)
+    expect(results[0].format).to  eq("aaaa")
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to    eq("aaaa")
+    expect(results[0].phrase).to  eq("aaaa")
+    expect(results[0].host).to    be_nil
+    expect(results[0].user).to    eq("")
+    expect(results[0].original).to eq("aaaa")
+    expect(results[1].format).to  eq("xyz@example.com")
+    expect(results[1].address).to eq("xyz@example.com")
+    expect(results[1].name).to    be_nil
+    expect(results[1].phrase).to  eq("")
+    expect(results[1].host).to    eq("example.com")
+    expect(results[1].user).to    eq("xyz")
+    expect(results[1].original).to eq("xyz@example.com")
+    expect(results[2].format).to  eq("bbbb")
+    expect(results[2].address).to be_nil
+    expect(results[2].name).to    eq("bbbb")
+    expect(results[2].phrase).to  eq("bbbb")
+    expect(results[2].host).to    be_nil
+    expect(results[2].user).to    eq("")
+    expect(results[2].original).to eq("bbbb")
   end
 
   it "a lot of types of undisclosed recipients" do
@@ -276,7 +302,6 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-#      expect(results[0].format).to  eq(%Q("#{line}"))
       expect(results[0].format).to eq(line)
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line)
@@ -334,14 +359,41 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
+      line.gsub!(';', '')
       expect(results[0].format).to  eq(line)
       expect(results[0].address).to be_nil
-      expect(results[0].name).to    eq(line)
+      expect(results[0].name).to    eq(line.strip)
       expect(results[0].phrase).to  eq(line)
       expect(results[0].host).to    be_nil
       expect(results[0].user).to    eq("")
       expect(results[0].original).to eq(line)
     end
+  end
+
+  it "all are invalid" do
+    line = 'aa aa, bb (bb), cccc'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('aa aa')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to eq('aa aa')
+    expect(results[0].phrase).to eq('aa aa')
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq('')
+    expect(results[0].original).to eq('aa aa')
+    expect(results[1].format).to eq('bb (bb)')
+    expect(results[1].address).to be_nil
+    expect(results[1].name).to eq('bb (bb)')
+    expect(results[1].phrase).to eq('bb (bb)')
+    expect(results[1].host).to be_nil
+    expect(results[1].user).to eq('')
+    expect(results[1].original).to eq('bb (bb)')
+    expect(results[2].format).to eq('cccc')
+    expect(results[2].address).to be_nil
+    expect(results[2].name).to eq('cccc')
+    expect(results[2].phrase).to eq('cccc')
+    expect(results[2].host).to be_nil
+    expect(results[2].user).to eq('')
+    expect(results[2].original).to eq('cccc')
   end
 
   it "empty string or nil" do
@@ -407,8 +459,8 @@ describe MailAddress do
     expect(results[0].format).to eq('Sf 山田 太郎@example.com')
     expect(results[0].address).not_to eq("Sf@example.com") ## important!
     expect(results[0].address).to be_nil                   ## important!
-    expect(results[0].name).to eq('山田 太郎')             ## I don't care whatever returns
-    expect(results[0].phrase).to eq('山田 太郎')           ## I don't care whatever returns
+    expect(results[0].name).to eq('Sf 山田 太郎@example.com')    ## I don't care whatever returns
+    expect(results[0].phrase).to eq('Sf 山田 太郎@example.com')  ## I don't care whatever returns
     expect(results[0].host).to be_nil
     expect(results[0].user).to eq('')
     expect(results[0].original).to eq('Sf 山田 太郎@example.com')

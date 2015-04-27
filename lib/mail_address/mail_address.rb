@@ -5,13 +5,13 @@ module MailAddress
     lines = addresses.grep(String)
     line = lines.join('')
 
-    # undisclosed-recipient
-    if line.match(/undisclosed[ \-]recipients?: ?;?/i)
+    # empty
+    if line.strip.empty?
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 
-    # obviously all email address(es) are invalid
-    unless line.match(/[a-z0-9\.\-"_\+]@/i)
+    # undisclosed-recipient
+    if line.match(/undisclosed[ \-]recipients?: ?;?/i)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 

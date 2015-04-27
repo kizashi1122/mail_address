@@ -5,7 +5,6 @@ module MailAddress
     attr_accessor :phrase, :address, :original
 
     def initialize(phrase, address, original)
-
       @address = address
       @phrase = phrase
       @original = original
@@ -17,9 +16,7 @@ module MailAddress
       end
 
       # invalid address
-      if @address.nil? && (phrase.nil? || phrase == "")
-        @phrase = original
-      end
+      @phrase = original if @address.nil?
     end
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
