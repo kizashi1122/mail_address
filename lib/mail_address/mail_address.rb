@@ -73,13 +73,12 @@ module MailAddress
 
   def self._tokenize(addresses)
     line = addresses.join(',') # $_
-    words, snippet, field = [], [], []
+    words = []
 
     line.sub!(/\A\s+/, '')
     line.gsub!(/[\r\n]+/,' ')
 
     while (line != '')
-      field = ''
       tmp = nil
       if (
           line.sub!(/\A("(?:[^"\\]+|\\.)*")(\s*)/, '')      || # "..."
