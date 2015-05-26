@@ -1,7 +1,6 @@
 # MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address) [![Coverage Status](https://coveralls.io/repos/kizashi1122/mail_address/badge.png)](https://coveralls.io/r/kizashi1122/mail_address)
 
-MailAddress is a simple email address parser.
-This library is implemented based on Perl Module Mail::Address and added some improvements.
+MailAddress is a port of Mail::Address from Perl. And also some modification are added.
 
 [mail](https://github.com/mikel/mail) is a great gem library. But some email addresses (mostly are violated RFC) are unparsable with mail gem which is strictly RFC compliant. In perl, [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod) is a very common library to parse email address. Mail::Address conviniently can parse even RFC-violated email addresses such as:
 
