@@ -1,20 +1,21 @@
 # MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address) [![Coverage Status](https://coveralls.io/repos/kizashi1122/mail_address/badge.png)](https://coveralls.io/r/kizashi1122/mail_address)
 
-MailAddress is a port of Mail::Address from Perl. And also some modification are added.
+MailAddress is a port of Mail::Address from Perl.
 
-[mail](https://github.com/mikel/mail) is a great gem library. But some email addresses (mostly are violated RFC) are unparsable with mail gem which is strictly RFC compliant. In perl, [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod) is a very common library to parse email address. Mail::Address conviniently can parse even RFC-violated email addresses such as:
+[mail](https://github.com/mikel/mail) is a great gem library. But some email addresses are unparsable with it. In perl, [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod) is a very common library to parse an email address. Mail::Address conviniently can parse even NOT RFC-compliant email addresses such as:
 
 ```rb
 # mail gem cannot parse the following addresses
 Ello [Do Not Reply] <do-not-reply@ello.co> # [, ] are not permitted according to RFC5322
-大阪 太郎<osaka@example.com> # no whitespace just before <
+大阪 太郎<osaka@example.com> # no whitespace just before `<`
 ```
-
-So I straightforwardly converted Perl module Mail::Address to Ruby gem. Then I reviced it because original Mail::Address also has some bad points. For example:
+But Mail::Address has some bad points (below). These are fixed in MailAddress.
 
 - if no ending parenthesis in name part, cannot parse correctly.
 - Modifications of name part are too much.
 
+However, MailAddress module cannnot parse whitespace-separated addresses.
+Many people could paste email addresses from Excel or the other spreadsheets. To accomplish this, also ported from a parser part of [Google Closure Library](https://github.com/google/closure-library/blob/master/closure/goog/format/emailaddress.js).
 
 ## Installation
 
@@ -59,7 +60,7 @@ p addrs[1].host       # "example.jp"
 p addrs[1].user       # "osaka"
 p addrs[1].original   # "大阪 太郎 <osaka@example.jp>"
 ```
-`address.name` and `address.phrase` are almost same. 
+`address.name` and `address.phrase` are almost same.
 `address.phrase` keeps outermost double quotes or parentheses.
 
 ## Contributing
