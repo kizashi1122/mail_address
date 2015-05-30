@@ -95,11 +95,11 @@ module MailAddress
 
     # If the closer is a quote we go forward skipping escaped quotes until we
     # hit the real closing one.
-    while (endpos && end_pos >= 0 && self.is_escaped_dbl_quote(str, end_pos))
+    while (end_pos && end_pos >= 0 && self.is_escaped_dbl_quote(str, end_pos))
       end_pos = str.index(closer_char, end_pos + 1)
     end
 
-    token = (endpos && end_pos >= 0) ? str[pos .. end_pos] : ch
+    token = (end_pos && end_pos >= 0) ? str[pos .. end_pos] : ch
     return token
   end
 
