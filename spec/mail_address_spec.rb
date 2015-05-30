@@ -443,14 +443,19 @@ describe MailAddress do
 
   it "corrupted address" do
     line = 'john <john@example.com' # lack of right angle bracket
-    expect {
-      results = MailAddress.parse(line)
-    }.to raise_error(StandardError)
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('john <john@example.com')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to eq('john <john@example.com')
+    expect(results[0].phrase).to eq('john <john@example.com')
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq('')
+    expect(results[0].original).to eq(line)
 
     line = 'john <john@example.com> (last' # lack of right parenthesis
     expect {
       results = MailAddress.parse(line)
-    }.to raise_error(StandardError)
+    }.to raise_error(StandardError, "cannot find end paren")
   end
 
   it "unbelievable but existed address" do

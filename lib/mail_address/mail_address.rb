@@ -43,11 +43,15 @@ module MailAddress
       elsif (substr == '>') then
         depth -= 1 if depth > 0
       elsif (substr == ',' || substr == ';') then
-        raise "Unmatched '<>' in line" if depth > 0
-
         original.sub!(/[,;]\s*\z/, '')
 
-        o = _complete(phrase, address, original)
+        if depth > 0
+          # raise "Unmatched '<>' in line"
+          o = MailAddress::Address.new(original, nil, original)
+          phrase.clear; address.clear
+        else
+          o = _complete(phrase, address, original)
+        end
 
         objs.push(o) if o
         depth = 0
