@@ -202,27 +202,27 @@ describe MailAddress do
 
   it "normal case (rfc-violated(RFC822) but commonly used in AU/DoCoMo)" do
     # dot before @
-    line = 'John Doe <"johndoe."@example.com>'
+    line = 'John Doe <johndoe.@example.com>'
     results = MailAddress.parse(line)
 
-    expect(results[0].format).to eq('John Doe <"johndoe."@example.com>')
-    expect(results[0].address).to eq('"johndoe."@example.com')
+    expect(results[0].format).to eq('John Doe <johndoe.@example.com>')
+    expect(results[0].address).to eq('johndoe.@example.com')
     expect(results[0].name).to eq("John Doe")
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
-    expect(results[0].user).to eq('"johndoe."')
+    expect(results[0].user).to eq('johndoe.')
     expect(results[0].original).to eq(line)
 
     # contains '..'
-    line = 'John Doe <"john..doe"@example.com>'
+    line = 'John Doe <john..doe@example.com>'
     results = MailAddress.parse(line)
 
-    expect(results[0].format).to eq('John Doe <"john..doe"@example.com>')
-    expect(results[0].address).to eq('"john..doe"@example.com')
+    expect(results[0].format).to eq('John Doe <john..doe@example.com>')
+    expect(results[0].address).to eq('john..doe@example.com')
     expect(results[0].name).to eq("John Doe")
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
-    expect(results[0].user).to eq('"john..doe"')
+    expect(results[0].user).to eq('john..doe')
     expect(results[0].original).to eq(line)
   end
 
@@ -328,15 +328,15 @@ describe MailAddress do
     end
 
     # a seemingly valid address
-    line = '"Undisclosed" <"recipients:"@nifty.com>'
-    results = MailAddress.parse(line)
-    expect(results[0].format).to  eq(line)
-    expect(results[0].address).to eq('"recipients:"@nifty.com')
-    expect(results[0].name).to    eq("Undisclosed")
-    expect(results[0].phrase).to  eq('"Undisclosed"')
-    expect(results[0].host).to    eq("nifty.com")
-    expect(results[0].user).to    eq('"recipients:"')
-    expect(results[0].original).to eq(line)
+    # line = '"Undisclosed" <"recipients:"@nifty.com>'
+    # results = MailAddress.parse(line)
+    # expect(results[0].format).to  eq(line)
+    # expect(results[0].address).to eq('"recipients:"@nifty.com')
+    # expect(results[0].name).to    eq("Undisclosed")
+    # expect(results[0].phrase).to  eq('"Undisclosed"')
+    # expect(results[0].host).to    eq("nifty.com")
+    # expect(results[0].user).to    eq('"recipients:"')
+    # expect(results[0].original).to eq(line)
   end
 
   it "specify mime-encoded address" do
