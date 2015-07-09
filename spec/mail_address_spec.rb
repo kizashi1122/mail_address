@@ -292,6 +292,41 @@ describe MailAddress do
     expect(results[0].original).to eq(line)
   end
 
+  it "Unclosed double quotes" do
+    line = '"john..doe@example.com'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"john..doe@example.com')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to eq('john..doe@example.com')    ## IRREGULAR PATTERN
+    expect(results[0].phrase).to eq('"john..doe@example.com') ## IRREGULAR PATTERN
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq("")
+    expect(results[0].original).to eq(line)
+
+    line = 'john..doe"@example.com'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('john..doe"@example.com')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to eq('john..doe"@example.com')    ## IRREGULAR PATTERN
+    expect(results[0].phrase).to eq('john..doe"@example.com') ## IRREGULAR PATTERN
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq("")
+    expect(results[0].original).to eq(line)
+
+    #
+    # it takes about 1 minutes in v1.4.5
+    #
+    line = '"ooooooooooooooooo@docomo.ne.jp'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"ooooooooooooooooo@docomo.ne.jp')
+    expect(results[0].address).to be_nil
+    expect(results[0].name).to eq('ooooooooooooooooo@docomo.ne.jp')    ## IRREGULAR PATTERN
+    expect(results[0].phrase).to eq('"ooooooooooooooooo@docomo.ne.jp') ## IRREGULAR PATTERN
+    expect(results[0].host).to be_nil
+    expect(results[0].user).to eq("")
+    expect(results[0].original).to eq(line)
+  end
+
   it "unparsable with mail gem (includes non-permitted char'[')" do
     line = "Ello [Do Not Reply] <do-not-reply@ello.co>"
     results = MailAddress.parse(line)
