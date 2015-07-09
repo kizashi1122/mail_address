@@ -202,7 +202,29 @@ describe MailAddress do
 
   it "normal case (rfc-violated(RFC822) but commonly used in AU/DoCoMo)" do
     # dot before @
-    line = 'John Doe <johndoe.@example.com>'
+    line = 'johndoe.@example.com' # no double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('johndoe.@example.com')
+    expect(results[0].address).to eq('johndoe.@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq("")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('johndoe.')
+    expect(results[0].original).to eq(line)
+
+    line = '"johndoe."@example.com' # enclosed with double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('"johndoe."@example.com')
+    expect(results[0].address).to eq('"johndoe."@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq("")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('"johndoe."')
+    expect(results[0].original).to eq(line)
+
+    line = 'John Doe <johndoe.@example.com>' # no double quotes
     results = MailAddress.parse(line)
 
     expect(results[0].format).to eq('John Doe <johndoe.@example.com>')
@@ -213,8 +235,41 @@ describe MailAddress do
     expect(results[0].user).to eq('johndoe.')
     expect(results[0].original).to eq(line)
 
+    line = 'John Doe <"johndoe."@example.com>' # enclosed with double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('John Doe <"johndoe."@example.com>')
+    expect(results[0].address).to eq('"johndoe."@example.com')
+    expect(results[0].name).to eq("John Doe")
+    expect(results[0].phrase).to eq("John Doe")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('"johndoe."')
+    expect(results[0].original).to eq(line)
+
     # contains '..'
-    line = 'John Doe <john..doe@example.com>'
+    line = 'john..doe@example.com'  # enclosed with double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('john..doe@example.com')
+    expect(results[0].address).to eq('john..doe@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq("")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('john..doe')
+    expect(results[0].original).to eq(line)
+
+    line = '"john..doe"@example.com'  # enclosed with double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('"john..doe"@example.com')
+    expect(results[0].address).to eq('"john..doe"@example.com')
+    expect(results[0].name).to be_nil
+    expect(results[0].phrase).to eq("")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('"john..doe"')
+    expect(results[0].original).to eq(line)
+
+    line = 'John Doe <john..doe@example.com>' # no double quotes
     results = MailAddress.parse(line)
 
     expect(results[0].format).to eq('John Doe <john..doe@example.com>')
@@ -223,6 +278,17 @@ describe MailAddress do
     expect(results[0].phrase).to eq("John Doe")
     expect(results[0].host).to eq("example.com")
     expect(results[0].user).to eq('john..doe')
+    expect(results[0].original).to eq(line)
+
+    line = 'John Doe <"john..doe"@example.com>'  # enclosed with double quotes
+    results = MailAddress.parse(line)
+
+    expect(results[0].format).to eq('John Doe <"john..doe"@example.com>')
+    expect(results[0].address).to eq('"john..doe"@example.com')
+    expect(results[0].name).to eq("John Doe")
+    expect(results[0].phrase).to eq("John Doe")
+    expect(results[0].host).to eq("example.com")
+    expect(results[0].user).to eq('"john..doe"')
     expect(results[0].original).to eq(line)
   end
 
