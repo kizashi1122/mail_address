@@ -35,7 +35,10 @@ module MailAddress
 
       if (substr == '(' && !address.empty?) then
         end_paren_idx = _find_next_paren(idx, tokens, len)
-        raise "cannot find end paren" if end_paren_idx == -1 # end paren must exists after address
+        if end_paren_idx == -1
+          # end paren doesn't exist
+          # but nothing to do
+        end
         rem = tokens[idx .. end_paren_idx]
         phrase.push(rem.join(''))
       elsif (substr == '<') then

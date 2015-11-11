@@ -554,9 +554,18 @@ describe MailAddress do
     expect(results[0].original).to eq(line)
 
     line = 'john <john@example.com> (last' # lack of right parenthesis
-    expect {
-      results = MailAddress.parse(line)
-    }.to raise_error(StandardError, 'cannot find end paren')
+    results = MailAddress.parse(line)
+    expect(results[0].original).to eq(line)
+
+    line = 'john <john@example.com> (ああ いい）' # right paren is a full-width char
+    results = MailAddress.parse(line)
+    expect(results[0].original).to eq(line)
+
+    line = 'john <john@example.com> (last, Mary <mary@example.com>' # lack of right parenthesis
+    results = MailAddress.parse(line)
+    expect(results[0].original).to eq('john <john@example.com> (last')
+    expect(results[1].original).to eq('Mary <mary@example.com>')
+
   end
 
   it "unbelievable but existed address" do
@@ -571,6 +580,7 @@ describe MailAddress do
     expect(results[0].user).to eq('')
     expect(results[0].original).to eq('Sf 山田 太郎@example.com')
   end
+
 
   it 'Perl Module TAP test data' do
     data = [
