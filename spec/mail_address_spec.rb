@@ -325,6 +325,7 @@ describe MailAddress do
     expect(results[0].host).to be_nil
     expect(results[0].user).to eq("")
     expect(results[0].original).to eq(line)
+
   end
 
   it "unparsable with mail gem (includes non-permitted char'[')" do
@@ -336,6 +337,16 @@ describe MailAddress do
     expect(results[0].phrase).to  eq('Ello [Do Not Reply]')
     expect(results[0].host).to    eq('ello.co')
     expect(results[0].user).to    eq('do-not-reply')
+    expect(results[0].original).to eq(line)
+
+    line = 'MM[天文雑学」編集部 mag2 0000290852 <mailmag@mag2.com>'
+    results = MailAddress.parse(line)
+    expect(results[0].format).to eq('"MM[天文雑学」編集部 mag2 0000290852" <mailmag@mag2.com>')
+    expect(results[0].address).to eq('mailmag@mag2.com')
+    expect(results[0].name).to eq('MM[天文雑学」編集部 mag2 0000290852')
+    expect(results[0].phrase).to eq('MM[天文雑学」編集部 mag2 0000290852')
+    expect(results[0].host).to eq('mag2.com')
+    expect(results[0].user).to eq('mailmag')
     expect(results[0].original).to eq(line)
   end
 
@@ -565,7 +576,6 @@ describe MailAddress do
     results = MailAddress.parse(line)
     expect(results[0].original).to eq('john <john@example.com> (last')
     expect(results[1].original).to eq('Mary <mary@example.com>')
-
   end
 
   it "unbelievable but existed address" do
@@ -580,7 +590,6 @@ describe MailAddress do
     expect(results[0].user).to eq('')
     expect(results[0].original).to eq('Sf 山田 太郎@example.com')
   end
-
 
   it 'Perl Module TAP test data' do
     data = [
