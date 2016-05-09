@@ -1,4 +1,4 @@
-# MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address) [![Coverage Status](https://coveralls.io/repos/kizashi1122/mail_address/badge.png)](https://coveralls.io/r/kizashi1122/mail_address)
+# MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address) [![Coverage Status](https://coveralls.io/repos/kizashi1122/mail_address/badge.png)](https://coveralls.io/r/kizashi1122/mail_address) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kizashi1122/mail_address/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kizashi1122/mail_address/?branch=master)
 
 MailAddress is a port of Mail::Address from Perl.
 
