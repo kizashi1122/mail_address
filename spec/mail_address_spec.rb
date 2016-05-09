@@ -76,7 +76,7 @@ describe MailAddress do
     expect(results[0].format).to eq('"ジョン ドゥ" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('ジョン ドゥ')
-    expect(results[0].phrase).to eq('"ジョン ドゥ"')
+    expect(results[0].phrase).to eq('ジョン ドゥ')
     expect(results[0].host).to eq('example.com')
     expect(results[0].user).to eq('johndoe')
     expect(results[0].original).to eq(line)
@@ -163,7 +163,7 @@ describe MailAddress do
     expect(results[0].format).to eq('"michael@example.jp" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('michael@example.jp')
-    expect(results[0].phrase).to eq('"michael@example.jp"')
+    expect(results[0].phrase).to eq('michael@example.jp')
     expect(results[0].host).to eq('example.com')
     expect(results[0].user).to eq('johndoe')
     expect(results[0].original).to eq(line)
@@ -534,30 +534,30 @@ describe MailAddress do
   it "includes backslash" do
     line = '\"jjjjjjjjjjjj\" <john_doe@example.com>'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('"jjjjjjjjjjjj" <john_doe@example.com>')
+    expect(results[0].format).to eq('jjjjjjjjjjjj <john_doe@example.com>')
     expect(results[0].address).to eq('john_doe@example.com')
     expect(results[0].name).to eq("jjjjjjjjjjjj")
-    expect(results[0].phrase).to eq('"jjjjjjjjjjjj"')
+    expect(results[0].phrase).to eq('jjjjjjjjjjjj')
     expect(results[0].host).to eq('example.com')
     expect(results[0].user).to eq('john_doe')
     expect(results[0].original).to eq('"jjjjjjjjjjjj" <john_doe@example.com>') # TO BE EXACT, NOT ORIGINAL.
 
     line = '\"jjjjjjjjjjjj" <john_doe@example.com>'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('"jjjjjjjjjjjj" <john_doe@example.com>')
+    expect(results[0].format).to eq('jjjjjjjjjjjj <john_doe@example.com>')
     expect(results[0].address).to eq('john_doe@example.com')
     expect(results[0].name).to eq("jjjjjjjjjjjj")
-    expect(results[0].phrase).to eq('"jjjjjjjjjjjj"')
+    expect(results[0].phrase).to eq('jjjjjjjjjjjj')
     expect(results[0].host).to eq('example.com')
     expect(results[0].user).to eq('john_doe')
     expect(results[0].original).to eq('"jjjjjjjjjjjj" <john_doe@example.com>') # TO BE EXACT, NOT ORIGINAL.
 
     line = '"jjjjjjjjjjjj\" <john_doe@example.com>'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('"jjjjjjjjjjjj" <john_doe@example.com>')
+    expect(results[0].format).to eq('jjjjjjjjjjjj <john_doe@example.com>')
     expect(results[0].address).to eq('john_doe@example.com')
     expect(results[0].name).to eq("jjjjjjjjjjjj")
-    expect(results[0].phrase).to eq('"jjjjjjjjjjjj"')
+    expect(results[0].phrase).to eq('jjjjjjjjjjjj')
     expect(results[0].host).to eq('example.com')
     expect(results[0].user).to eq('john_doe')
     expect(results[0].original).to eq('"jjjjjjjjjjjj" <john_doe@example.com>') # TO BE EXACT, NOT ORIGINAL.

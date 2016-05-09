@@ -125,7 +125,17 @@ module MailAddress
   def self._complete (phrase, address, original)
     phrase.length > 0 || address.length > 0 or return nil
 
-    new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''), original)
+    name = phrase.join('').strip
+
+    name = self.collapse_whitespace(name)
+    name = name[1 .. -2] if name.start_with?('\'') && name.end_with?('\'')
+    name = name[1 .. -2] if name.start_with?('"') && name.end_with?('"')
+
+    # Replace escaped quotes and slashes.
+    name = name.gsub(ESCAPED_DOUBLE_QUOTES_, '"')
+    name = name.gsub(ESCAPED_BACKSLASHES_, '\\')
+
+    new_address = MailAddress::Address.new(name, address.join(''), original)
     phrase.clear; address.clear
     new_address
   end
