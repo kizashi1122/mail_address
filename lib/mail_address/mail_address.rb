@@ -82,14 +82,14 @@ module MailAddress
     line = addresses.join(',') # $_
     words = []
 
+    line.gsub!(/\\/, '')
     line.sub!(/\A\s+/, '')
     line.gsub!(/[\r\n]+/,' ')
 
     while (line != '')
       tmp = nil
       if (
-          line.match(/"[^"]+"/) && line.sub!(/\A("(?:[^"\\]+|\\.)*")(\s*)/, '')  || # "..."
-#         line.sub!(/\A(\[(?:[^\\]\]+|\\.)*\])(\s*)/, '')   || # [...]
+          line.match(/"[^"]+"/) && line.sub!(/\A(\\?"(?:[^"\\]+|\\.)*")(\s*)/, '')  || # "..."
           line.sub!(/\A([^\s()<>\@,;:\\".\[\]]+)(\s*)/, '') ||
           line.sub!(/\A([()<>\@,;:\\".\[\]])(\s*)/, '')
           )
@@ -124,6 +124,7 @@ module MailAddress
 
   def self._complete (phrase, address, original)
     phrase.length > 0 || address.length > 0 or return nil
+
     new_address = MailAddress::Address.new(phrase.join('').strip, address.join(''), original)
     phrase.clear; address.clear
     new_address
