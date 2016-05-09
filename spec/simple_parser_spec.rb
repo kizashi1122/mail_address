@@ -63,17 +63,25 @@ describe MailAddress do
 
   it "testparseListWithCommaInLocalPart" do
     res = assert_parsed_list(
-      '"Doe, John" <doe.john@gmail.com>, <someone@gmail.com>',
-      ['doe.john@gmail.com', 'someone@gmail.com'])
-    expect(res[0].phrase).to eq('Doe, John')
-    expect(res[1].phrase).to eq('')
+      '"Doe, John" <doe.john@gmail.com>, <someone@gmail.com>, "あいうえお" <abc@example.com>, かき くけこ <xyz@example.com>',
+      ['doe.john@gmail.com', 'someone@gmail.com', 'abc@example.com', 'xyz@example.com'])
+    expect(res[0].name).to eq('Doe, John')
+    expect(res[1].name).to be_nil
+    expect(res[2].name).to eq('あいうえお')
+    expect(res[3].name).to eq('かき くけこ')
+    expect(res[2].format).to eq('"あいうえお" <abc@example.com>')
+    expect(res[2].original).to eq('"あいうえお" <abc@example.com>')
   end
 
   it "testparseListWithWhitespaceSeparatedEmails" do
     res = assert_parsed_list(
-      'a@b.com <c@d.com> e@f.com "G H" <g@h.com> i@j.com',
+      'a@b.com abc <c@d.com> e@f.com "G H" <g@h.com> i@j.com',
       ['a@b.com', 'c@d.com', 'e@f.com', 'g@h.com', 'i@j.com']);
-    expect(res[3].phrase).to eq('G H')
+    expect(res[3].name).to eq('G H')
+    expect(res[1].original).to eq('abc <c@d.com>')
+    expect(res[1].format).to eq('abc <c@d.com>')
+    expect(res[3].original).to eq('"G H" <g@h.com>')
+    expect(res[3].format).to eq('G H <g@h.com>')
   end
 
   it "testparseListSystemNewlines" do
