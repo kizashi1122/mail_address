@@ -79,6 +79,8 @@ module MailAddress
 
     #address = goog.string.collapseWhitespace(address);
     address.strip!
+
+    addr = addr.strip
     MailAddress::Address.new(name, address, addr)
   end
 
