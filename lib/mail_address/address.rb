@@ -21,13 +21,15 @@ module MailAddress
 
     ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
 
-    def format
+    def format(enquote = false)
       addr = []
       return @original if @address.nil?
 
+      email_address = enquote ? quoted_address : @address
+
       if !@phrase.nil? && @phrase.length > 0 then
         if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
-          addr.push(@address) if !@address.nil? && @address.length > 0
+          addr.push(email_address) if !@address.nil? && @address.length > 0
           addr.push(@phrase)
         else
           addr.push(
@@ -35,10 +37,10 @@ module MailAddress
             : @phrase.match(/(?<!\\)"/)            ? @phrase
             : %Q("#{@phrase}")
             )
-          addr.push "<#{@address}>" if !@address.nil? && @address.length > 0
+          addr.push "<#{email_address}>" if !@address.nil? && @address.length > 0
         end
       elsif !@address.nil? && @address.length > 0 then
-        addr.push(@address)
+        addr.push(email_address)
       end
       addr.join(' ')
     end
@@ -59,6 +61,16 @@ module MailAddress
       addr = @address || '';
       i = addr.rindex('@')
       i.nil? ? addr : addr[0 ... i]
+    end
+
+    def quoted_address
+      if @address
+        if self.user.include?('..') || self.user.end_with?('.')
+          local_part = self.user.gsub(/(\A"|"\z)/, '')
+          return "\"#{local_part}\"@#{self.host}"
+        end
+      end
+      @address
     end
 
     private
