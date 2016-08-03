@@ -65,8 +65,8 @@ module MailAddress
 
     def quoted_address
       if @address
-        if self.user.include?('..') || self.user.end_with?('.')
-          local_part = self.user.gsub(/(\A"|"\z)/, '')
+        local_part = self.user.gsub(/(\A"|"\z)/, '')
+        if local_part.include?('..') || local_part.end_with?('.')
           return "\"#{local_part}\"@#{self.host}"
         end
       end
