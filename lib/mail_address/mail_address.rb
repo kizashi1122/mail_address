@@ -3,10 +3,10 @@ module MailAddress
 
   def self.parse(*addresses)
     lines = addresses.grep(String)
-    line = lines.join('')
+    line = lines.join('').strip
 
-    # empty
-    if line.strip.empty?
+    # empty or <> or < or >
+    if line.empty? || line.match(/\A[<>;, ]+\z/)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 

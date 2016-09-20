@@ -491,12 +491,30 @@ describe MailAddress do
   it "obviously invalid address (has no '@')" do
     array = [
       'recipient list not shown: ;',
-      '各位:;'
+      '各位:;',
+      '<>',
+      '<',
+      '>',
     ]
 
     array.each do |line|
       results = MailAddress.parse(line)
       line.gsub!(';', '')
+      expect(results[0].format).to  eq(line)
+      expect(results[0].address).to be_nil
+      expect(results[0].name).to    eq(line.strip)
+      expect(results[0].phrase).to  eq(line)
+      expect(results[0].host).to    be_nil
+      expect(results[0].user).to    eq('')
+      expect(results[0].original).to eq(line)
+    end
+  end
+
+  it "only separator" do
+    array = [',', ';', ',;', ',,', ';;;', '<;,>, <>']
+
+    array.each do |line|
+      results = MailAddress.parse(line)
       expect(results[0].format).to  eq(line)
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line.strip)
