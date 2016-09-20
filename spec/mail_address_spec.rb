@@ -439,7 +439,7 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-      expect(results[0].format).to eq(line)
+      expect(results[0].format).to eq(line.gsub(/[;,]/, ''))
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line)
       expect(results[0].phrase).to  eq(line)
@@ -455,7 +455,7 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-      expect(results[0].format).to  eq(line)
+      expect(results[0].format).to  eq(line.gsub(/[;,]/, ''))
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line)
       expect(results[0].phrase).to  eq(line)
@@ -515,7 +515,7 @@ describe MailAddress do
 
     array.each do |line|
       results = MailAddress.parse(line)
-      expect(results[0].format).to  eq(line)
+      expect(results[0].format).to  eq(line.gsub(/[;,]/, ''))
       expect(results[0].address).to be_nil
       expect(results[0].name).to    eq(line.strip)
       expect(results[0].phrase).to  eq(line)

@@ -23,7 +23,7 @@ module MailAddress
 
     def format(enquote = false)
       addr = []
-      return @original if @address.nil?
+      return @original.gsub(/[;,]/, '') if @address.nil?
 
       email_address = enquote ? quoted_address : @address
 
