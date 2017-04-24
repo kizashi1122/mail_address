@@ -61,6 +61,10 @@ describe MailAddress do
     # expect(res[1].phrase).to eq('g"h"i\\')
   end
 
+  it "aaaaaaaaaaaaa" do
+    res = assert_parsed_list( '(*^^*)(・・;) <vermilion.lv22@gmail.com>', ['vermilion.lv22@gmail.com'] )
+  end
+
   it "testparseListWithCommaInLocalPart" do
     res = assert_parsed_list(
       '"Doe, John" <doe.john@gmail.com>, <someone@gmail.com>, "あいうえお" <abc@example.com>, かき くけこ <xyz@example.com>',

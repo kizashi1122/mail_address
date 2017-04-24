@@ -91,8 +91,10 @@ describe MailAddress do
     # address + (note)
     line = 'johndoe@example.com (John Doe)'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('johndoe@example.com (John Doe)')
-    expect(results[0].format(true)).to eq('johndoe@example.com (John Doe)')
+    # expect(results[0].format).to eq('johndoe@example.com (John Doe)')
+    # expect(results[0].format(true)).to eq('johndoe@example.com (John Doe)')
+    expect(results[0].format).to eq('"(John Doe)" <johndoe@example.com>')
+    expect(results[0].format(true)).to eq('"(John Doe)" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('John Doe')
     expect(results[0].phrase).to eq('(John Doe)')
@@ -103,8 +105,10 @@ describe MailAddress do
     # address + (note) # nested paren
     line = 'johndoe@example.com (John (Mid) Doe)'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('johndoe@example.com (John (Mid) Doe)')
-    expect(results[0].format(true)).to eq('johndoe@example.com (John (Mid) Doe)')
+    # expect(results[0].format).to eq('johndoe@example.com (John (Mid) Doe)')
+    # expect(results[0].format(true)).to eq('johndoe@example.com (John (Mid) Doe)')
+    expect(results[0].format).to eq('"(John (Mid) Doe)" <johndoe@example.com>')
+    expect(results[0].format(true)).to eq('"(John (Mid) Doe)" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('John (Mid) Doe')
     expect(results[0].phrase).to eq('(John (Mid) Doe)')
@@ -115,8 +119,10 @@ describe MailAddress do
     # address + (note) # note has special char
     line = 'johndoe@example.com (John@Doe)'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('johndoe@example.com (John@Doe)')
-    expect(results[0].format(true)).to eq('johndoe@example.com (John@Doe)')
+    # expect(results[0].format).to eq('johndoe@example.com (John@Doe)')
+    # expect(results[0].format(true)).to eq('johndoe@example.com (John@Doe)')
+    expect(results[0].format).to eq('"(John@Doe)" <johndoe@example.com>')
+    expect(results[0].format(true)).to eq('"(John@Doe)" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('John@Doe')
     expect(results[0].phrase).to eq('(John@Doe)')
@@ -126,8 +132,10 @@ describe MailAddress do
 
     line = 'johndoe@example.com (John, Doe)'
     results = MailAddress.parse(line)
-    expect(results[0].format).to eq('johndoe@example.com (John, Doe)')
-    expect(results[0].format(true)).to eq('johndoe@example.com (John, Doe)')
+    # expect(results[0].format).to eq('johndoe@example.com (John, Doe)')
+    # expect(results[0].format(true)).to eq('johndoe@example.com (John, Doe)')
+    expect(results[0].format).to eq('"(John, Doe)" <johndoe@example.com>')
+    expect(results[0].format(true)).to eq('"(John, Doe)" <johndoe@example.com>')
     expect(results[0].address).to eq('johndoe@example.com')
     expect(results[0].name).to eq('John, Doe')
     expect(results[0].phrase).to eq('(John, Doe)')
@@ -707,13 +715,13 @@ describe MailAddress do
       #   '"JAMES R. TWINE - THE NERD" <TWINE57%SDELVB%SNYDELVA.bitnet@CUNYVM.CUNY.EDU>',
       #   'James R. Twine - The Nerd'],
       [ 'bilsby@signal.dra (Fred C. M. Bilsby)',
-        'bilsby@signal.dra (Fred C. M. Bilsby)',
+        '"(Fred C. M. Bilsby)" <bilsby@signal.dra>',
         'Fred C. M. Bilsby'],
       # [ '/G=Owen/S=Smith/O=SJ-Research/ADMD=INTERSPAN/C=GB/@mhs-relay.ac.uk', ### not supported
       #   '/G=Owen/S=Smith/O=SJ-Research/ADMD=INTERSPAN/C=GB/@mhs-relay.ac.uk',
       #   'Owen Smith'],
       [ 'apardon@rc1.vub.ac.be (Antoon Pardon)',
-        'apardon@rc1.vub.ac.be (Antoon Pardon)',
+        '"(Antoon Pardon)" <apardon@rc1.vub.ac.be>',
         'Antoon Pardon'],
       # ['"Stephen Burke, Liverpool" <BURKE@vxdsya.desy.de>',
       #   '"Stephen Burke, Liverpool" <BURKE@vxdsya.desy.de>',
@@ -728,13 +736,13 @@ describe MailAddress do
         'The Newcastle Info-Server <info-admin@newcastle.ac.uk>',
         'The Newcastle Info-Server'],
       ['wsinda@nl.tue.win.info (Dick Alstein)',
-        'wsinda@nl.tue.win.info (Dick Alstein)',
+        '"(Dick Alstein)" <wsinda@nl.tue.win.info>',
         'Dick Alstein'],
       ['mserv@rusmv1.rus.uni-stuttgart.de (RUS Mail Server)',
-        'mserv@rusmv1.rus.uni-stuttgart.de (RUS Mail Server)',
+        '"(RUS Mail Server)" <mserv@rusmv1.rus.uni-stuttgart.de>',
         'RUS Mail Server'],
       ['Suba.Peddada@eng.sun.com (Suba Peddada [CONTRACTOR])',
-        'Suba.Peddada@eng.sun.com (Suba Peddada [CONTRACTOR])',
+        '"(Suba Peddada [CONTRACTOR])" <Suba.Peddada@eng.sun.com>',
         'Suba Peddada'],
       ['ftpmail-adm@info2.rus.uni-stuttgart.de',
         'ftpmail-adm@info2.rus.uni-stuttgart.de',
@@ -779,13 +787,13 @@ describe MailAddress do
         'Jeffrey A Law <law@snake.cs.utah.edu>',
         'Jeffrey A Law'],
       ['lidl@uunet.uu.net (Kurt J. Lidl)',
-        'lidl@uunet.uu.net (Kurt J. Lidl)',
+        '"(Kurt J. Lidl)" <lidl@uunet.uu.net>',
         'Kurt J. Lidl'],
       ['Kresten_Thorup@NeXT.COM (Kresten Krab Thorup)',
-        'Kresten_Thorup@NeXT.COM (Kresten Krab Thorup)',
+        '"(Kresten Krab Thorup)" <Kresten_Thorup@NeXT.COM>',
         'Kresten Krab Thorup'],
       ['hjl@nynexst.com (H.J. Lu)',
-        'hjl@nynexst.com (H.J. Lu)',
+        '"(H.J. Lu)" <hjl@nynexst.com>',
         'H.J. Lu'],
       # ['@oleane.net:hugues@afp.com a!b@c.d foo!bar!foobar!root',
       #   '@oleane.net:hugues@afp.com',
@@ -819,5 +827,3 @@ describe MailAddress do
    end
   end
 end
-
-

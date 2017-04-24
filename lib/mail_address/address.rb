@@ -28,17 +28,17 @@ module MailAddress
       email_address = enquote ? quoted_address : @address
 
       if !@phrase.nil? && @phrase.length > 0 then
-        if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
-          addr.push(email_address) if !@address.nil? && @address.length > 0
-          addr.push(@phrase)
-        else
+        # if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
+        #   addr.push(email_address) if !@address.nil? && @address.length > 0
+        #   addr.push(@phrase)
+        # else
           addr.push(
             @phrase.match(/^(?:\s*#{ATEXT}\s*)+$/) ? @phrase
             : @phrase.match(/(?<!\\)"/)            ? @phrase
             : %Q("#{@phrase}")
             )
           addr.push "<#{email_address}>" if !@address.nil? && @address.length > 0
-        end
+        # end
       elsif !@address.nil? && @address.length > 0 then
         addr.push(email_address)
       end
