@@ -1,6 +1,10 @@
 
 module MailAddress
 
+  def self.parse_first(*addresses)
+    self.parse(*addresses).first
+  end
+
   def self.parse(*addresses)
     lines = addresses.grep(String)
     line = lines.join('').strip

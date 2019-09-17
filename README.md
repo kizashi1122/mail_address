@@ -14,7 +14,7 @@ But Mail::Address(Perl) has some bad points (below). These are fixed in MailAddr
 - if no ending parenthesis in name part, cannot parse correctly.
 - Modifications of name part are too much.
 
-Many people copy and paste email addresses from Excel or the other spreadsheets. In this case, addresses are separated by whitespace(tab or space). To enable to parse this, also ported from a parser part of [Google Closure Library](https://github.com/google/closure-library/blob/master/closure/goog/format/emailaddress.js). 
+Many people copy and paste email addresses from Excel or the other spreadsheets. In this case, addresses are separated by whitespace(tab or space). To enable to parse this, also ported from a parser part of [Google Closure Library](https://github.com/google/closure-library/blob/master/closure/goog/format/emailaddress.js).
 
 ## Installation
 
@@ -62,6 +62,15 @@ p addrs[1].original   # "大阪 太郎 <osaka@example.jp>"
 
 `address.name` and `address.phrase` are almost same.
 `address.phrase` keeps outermost double quotes or parentheses.
+
+if you specify single email address, you can use `parse_first`.
+
+```rb
+line = "John Doe <john@example.com>"
+addr = MailAddress.parse_first(line)
+
+p addr.address # "john@example.com"
+```
 
 ### Parse addresses separated with whitespace
 
