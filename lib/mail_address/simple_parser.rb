@@ -134,4 +134,8 @@ module MailAddress
     EMAIL_ADDRESS_ =~ address.address
   end
 
+  class << self
+    alias_method :g_parse, :parse_simple
+  end
+
 end

@@ -11,7 +11,7 @@ require 'pp'
 describe MailAddress do
 
   def assert_parsed_list(input, expected_list, opt_message = nil)
-    result = MailAddress.parse_simple input
+    result = MailAddress.g_parse input
     expect(result.size).to eq(expected_list.size)
     expected_list.each_with_index do |expected, index|
       expect(result[index].address).to eq(expected)
