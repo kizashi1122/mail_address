@@ -37,7 +37,7 @@ module MailAddress
         next
       end
 
-      if (substr == '(' && !address.empty?) then
+      if (substr == '(' && !address.empty?)
         end_paren_idx = _find_next_paren(idx, tokens, len)
         if end_paren_idx == -1
           # end paren doesn't exist
@@ -45,11 +45,11 @@ module MailAddress
         end
         rem = tokens[idx .. end_paren_idx]
         phrase.push(rem.join(''))
-      elsif (substr == '<') then
+      elsif (substr == '<')
         depth += 1
-      elsif (substr == '>') then
+      elsif (substr == '>')
         depth -= 1 if depth > 0
-      elsif (substr == ',' || substr == ';') then
+      elsif (substr == ',' || substr == ';')
         original.sub!(/[,;]\s*\z/, '')
 
         if depth > 0
@@ -65,12 +65,12 @@ module MailAddress
         end_paren_idx = 0
         original = ''
         _next = _find_next idx+1, tokens, len
-      elsif (depth > 0) then
+      elsif (depth > 0)
         token.strip!
         address.push(token)
-      elsif (_next == '<') then
+      elsif (_next == '<')
         phrase.push(token)
-      elsif ( token.match(/^[.\@:;]/) || address.empty? || address[-1].match(/^[.\@:;]/) ) then
+      elsif ( token.match(/^[.\@:;]/) || address.empty? || address[-1].match(/^[.\@:;]/) )
         token.strip!
         address.push(token)
       else
