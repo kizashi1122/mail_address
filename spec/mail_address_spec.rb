@@ -3,6 +3,13 @@ require 'pp'
 
 describe MailAddress do
 
+  it "long address takes long time to format" do
+    aaa15 = "aaa " * 15
+    line = "\"#{aaa15} https://aaa.com\" <example@example.jp>"
+    result = MailAddress.parse_first(line)
+    expect(result.format).not_to be_nil    # takes 5s at version 1.2.15
+  end
+
   it "normal case (commonly used)" do
     # address only
     line = 'johndoe@example.com'

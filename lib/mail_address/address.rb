@@ -19,7 +19,7 @@ module MailAddress
       @phrase = original if @address.nil?
     end
 
-    ATEXT = '[\-\w !#$%&\'*+/=?^`{|}~]'
+    ATEXT = '[\-\w\s!#$%&\'*+/=?^`{|}~]'
 
     def format(enquote = false)
       addr = []
@@ -33,8 +33,8 @@ module MailAddress
         #   addr.push(@phrase)
         # else
           addr.push(
-            @phrase.match(/^(?:\s*#{ATEXT}\s*)+$/) ? @phrase
-            : @phrase.match(/(?<!\\)"/)            ? @phrase
+            @phrase.match(/^(?:#{ATEXT})+$/) ? @phrase
+            : @phrase.match(/(?<!\\)"/)      ? @phrase
             : %Q("#{@phrase}")
             )
           addr.push "<#{email_address}>" if !@address.nil? && @address.length > 0
