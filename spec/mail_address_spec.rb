@@ -589,7 +589,7 @@ describe MailAddress do
     expect(result.name).to be_nil
     expect(result.phrase).to eq('\\')
     expect(result.host).to be_nil
-    expect(result.user).to be_nil
+    expect(result.user).to eq('')
     expect(result.original).to eq('\\')
 
     line = '\"jjjjjjjjjjjj\" <john_doe@example.com>'
