@@ -10,7 +10,7 @@ module MailAddress
     line = lines.join('').strip
 
     # empty or <> or < or >
-    if line.empty? || line.match(/\A[<>;, ]+\z/)
+    if line.empty? || line.match(/\A[<>;, \\]+\z/)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 

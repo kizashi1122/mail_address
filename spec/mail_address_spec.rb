@@ -582,6 +582,16 @@ describe MailAddress do
   end
 
   it "includes backslash" do
+    line = '\\'
+    result = MailAddress.parse_first(line)
+    expect(result.format).to eq('\\')
+    expect(result.address).to be_nil
+    expect(result.name).to be_nil
+    expect(result.phrase).to eq('\\')
+    expect(result.host).to be_nil
+    expect(result.user).to be_nil
+    expect(result.original).to eq('\\')
+
     line = '\"jjjjjjjjjjjj\" <john_doe@example.com>'
     result = MailAddress.parse_first(line)
     expect(result.format).to eq('jjjjjjjjjjjj <john_doe@example.com>')
