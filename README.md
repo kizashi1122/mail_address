@@ -35,7 +35,7 @@ Or install it yourself as:
 ## Usage
 
 It's almost the same as Mail::Address(Perl).
-But in this module, removed `comment` property from address class in version v1.0.0. Most people don't reallize comment I think.
+But in this module, removed `comment` property from address class in version v1.0.0. Most people don't realize comment I think.
 
 ```rb
 require 'mail_address'
