@@ -23,6 +23,19 @@ describe MailAddress do
     expect(result.user).to eq('johndoe')
     expect(result.original).to eq(line)
 
+    # subdomain has underscore(s) (not common though)
+    line = 'johndoe@sub_domain.example.com'
+    result = MailAddress.parse_first(line)
+    expect(result.format).to eq('johndoe@sub_domain.example.com')
+    expect(result.format(true)).to eq('johndoe@sub_domain.example.com')
+    expect(result.address).to eq('johndoe@sub_domain.example.com')
+    expect(result.name).to be_nil
+    expect(result.phrase).to eq('')
+    expect(result.host).to eq('sub_domain.example.com')
+    expect(result.user).to eq('johndoe')
+    expect(result.original).to eq(line)
+
+
     # <address> only
     line = '<johndoe@example.com>'
     result = MailAddress.parse_first(line)
