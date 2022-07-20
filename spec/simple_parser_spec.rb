@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
-require 'pp'
 
 #
 # These tests are almost ports of the following test code:
@@ -99,6 +97,12 @@ describe MailAddress do
       'Failed to parse obsolete newlines');
     assert_parsed_list("a@b.com\rc@d.com", ['a@b.com', 'c@d.com'],
       'Failed to parse pre-OS X Mac newlines');
+  end
+
+  context "subdomain has underscore(s)" do
+    it "permits as an email address" do
+      assert_parsed_list("a@sub_domain.example.com", ['a@sub_domain.example.com'], 'OK');
+    end
   end
 
 end
