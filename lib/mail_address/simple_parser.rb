@@ -12,10 +12,10 @@ module MailAddress
   # CHARS_REQUIRE_QUOTES_ = SPECIAL_CHARS + ADDRESS_SEPARATORS_
   ESCAPED_DOUBLE_QUOTES_ = /\\\"/
   ESCAPED_BACKSLASHES_ = /\\\\/
-  QUOTED_REGEX_STR_ = '[+a-zA-Z0-9_.!#$%&\'*\\/=?^`{|}~-]+'
+  QUOTED_REGEX_STR_ = '[+a-zA-Z0-9_.!#$%&\'*\\/=?^`{|}~\-]+'
   UNQUOTED_REGEX_STR_ = '"' + QUOTED_REGEX_STR_ + '"'
   LOCAL_PART_REGEXP_STR_ = '(?:' + QUOTED_REGEX_STR_ + '|' + UNQUOTED_REGEX_STR_ + ')'
-  DOMAIN_PART_REGEXP_STR_ = '([a-zA-Z0-9-_]+\\.)+[a-zA-Z0-9]{2,63}'
+  DOMAIN_PART_REGEXP_STR_ = '([a-zA-Z0-9\-_]+\\.)+[a-zA-Z0-9]{2,63}'
   EMAIL_ADDRESS_ = Regexp.new('\\A' + LOCAL_PART_REGEXP_STR_ + '@' + DOMAIN_PART_REGEXP_STR_ + '\\z')
 
   def self.parse_simple(str)
