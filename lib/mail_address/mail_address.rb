@@ -20,7 +20,7 @@ module MailAddress
     end
 
     phrase, address, objs = [], [], []
-    original = ''
+    original = ''.dup
     depth, idx, end_paren_idx = 0, 0, 0
 
     tokens = _tokenize lines
@@ -63,7 +63,7 @@ module MailAddress
         objs.push(o) if o
         depth = 0
         end_paren_idx = 0
-        original = ''
+        original = ''.dup
         _next = _find_next idx+1, tokens, len
       elsif (depth > 0)
         token.strip!
