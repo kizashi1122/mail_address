@@ -1,18 +1,16 @@
 require 'simplecov'
 
-begin
-  require 'coveralls_reborn'
-  Coveralls.wear! do
-    add_filter '.bundle/'
-  end
+if ENV['CI']
+  require 'simplecov-lcov'
+  SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
+    SimpleCov::Formatter::LcovFormatter
   ])
-rescue LoadError
-  SimpleCov.start do
-    add_filter '.bundle/'
-  end
+end
+
+SimpleCov.start do
+  add_filter '.bundle/'
 end
 
 require 'rubygems'
