@@ -2,17 +2,17 @@ require 'simplecov'
 
 begin
   require 'coveralls'
-  Coveralls.wear!
+  Coveralls.wear! do
+    add_filter '.bundle/'
+  end
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
     Coveralls::SimpleCov::Formatter
   ])
 rescue LoadError
-  SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
-end
-
-SimpleCov.start do
-  add_filter '.bundle/'
+  SimpleCov.start do
+    add_filter '.bundle/'
+  end
 end
 
 require 'rubygems'
