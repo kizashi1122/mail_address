@@ -1,7 +1,7 @@
 require 'simplecov'
 
 begin
-  require 'coveralls'
+  require 'coveralls_reborn'
   Coveralls.wear! do
     add_filter '.bundle/'
   end
