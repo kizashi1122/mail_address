@@ -10,12 +10,12 @@ module MailAddress
     line = lines.join('').strip
 
     # empty or <> or < or >
-    if line.empty? || line.match(/\A[<>;, \\]+\z/)
+    if line.empty? || line.match?(/\A[<>;, \\]+\z/)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 
     # undisclosed-recipient
-    if line.match(/undisclosed[ \-]recipients?: ?;?/i)
+    if line.match?(/undisclosed[ \-]recipients?: ?;?/i)
       return [ MailAddress::Address.new(line, nil, line) ]
     end
 
@@ -27,7 +27,7 @@ module MailAddress
     len    = tokens.length
     _next  = _find_next idx, tokens, len
 
-    for idx in 0 ... len do
+    (0...len).each do |idx|
 
       token = tokens[idx]
       substr = token[0, 1]
@@ -55,7 +55,8 @@ module MailAddress
         if depth > 0
           # raise "Unmatched '<>' in line"
           o = MailAddress::Address.new(original, nil, original)
-          phrase.clear; address.clear
+          phrase.clear
+          address.clear
         else
           o = _complete(phrase, address, original)
         end
@@ -70,7 +71,7 @@ module MailAddress
         address.push(token)
       elsif (_next == '<')
         phrase.push(token)
-      elsif ( token.match(/^[.\@:;]/) || address.empty? || address[-1].match(/^[.\@:;]/) )
+      elsif ( token.match?(/^[.\@:;]/) || address.empty? || address[-1].match?(/^[.\@:;]/) )
         token.strip!
         address.push(token)
       else
@@ -90,10 +91,9 @@ module MailAddress
     line.sub!(/\A\s+/, '')
     line.gsub!(/[\r\n]+/,' ')
 
-    while (line != '')
-      tmp = nil
+    until line.empty?
       if (
-          line.match(/"[^"]+"/) && line.sub!(/\A(\\?"(?:[^"\\]+|\\.)*")(\s*)/, '')  || # "..."
+          line.match?(/"[^"]+"/) && line.sub!(/\A(\\?"(?:[^"\\]+|\\.)*")(\s*)/, '')  || # "..."
           line.sub!(/\A([^\s()<>\@,;:\\".\[\]]+)(\s*)/, '') ||
           line.sub!(/\A([()<>\@,;:\\".\[\]])(\s*)/, '')
           )
@@ -127,7 +127,7 @@ module MailAddress
   end
 
   def self._complete (phrase, address, original)
-    phrase.length > 0 || address.length > 0 or return nil
+    return nil if phrase.empty? && address.empty?
 
     name = phrase.join('').strip
 
@@ -140,7 +140,8 @@ module MailAddress
     name = name.gsub(ESCAPED_BACKSLASHES_, '\\')
 
     new_address = MailAddress::Address.new(name, address.join(''), original)
-    phrase.clear; address.clear
+    phrase.clear
+    address.clear
     new_address
   end
 

@@ -27,7 +27,7 @@ module MailAddress
 
       email_address = enquote ? quoted_address : @address
 
-      if !@phrase.nil? && @phrase.length > 0
+      if !@phrase.nil? && !@phrase.empty?
         # if @phrase.match(/\A\(/) && @phrase.match(/\)\z/)
         #   addr.push(email_address) if !@address.nil? && @address.length > 0
         #   addr.push(@phrase)
@@ -35,11 +35,11 @@ module MailAddress
           addr.push(
             @phrase.match(/^(?:#{ATEXT})+$/) ? @phrase
             : @phrase.match(/(?<!\\)"/)      ? @phrase
-            : %Q("#{@phrase}")
+            : "\"#{@phrase}\""
             )
-          addr.push "<#{email_address}>" if !@address.nil? && @address.length > 0
+          addr.push "<#{email_address}>" if !@address.nil? && !@address.empty?
         # end
-      elsif !@address.nil? && @address.length > 0
+      elsif !@address.nil? && !@address.empty?
         addr.push(email_address)
       end
       addr.join(' ')
@@ -48,19 +48,19 @@ module MailAddress
     def name
       phrase = @phrase.dup
       name   = Address._extract_name(phrase)
-      name.length > 0 ? name : nil
+      !name.empty? ? name : nil
     end
 
     def host
-      addr = @address || '';
+      addr = @address || ''
       i = addr.rindex('@')
-      i.nil? ? nil : addr[i + 1 .. -1]
+      addr[(i + 1)..] if i
     end
 
     def user
-      addr = @address || '';
+      addr = @address || ''
       i = addr.rindex('@')
-      i.nil? ? addr : addr[0 ... i]
+      i ? addr[0...i] : addr
     end
 
     def quoted_address
@@ -78,18 +78,16 @@ module MailAddress
     # given a comment, attempt to extract a person's name
     def self._extract_name(name)
       # This function can be called as method as well
-      return '' if name.nil? || name == ''
+      return '' if name.nil? || name.empty?
 
       # Using encodings, too hard. See Mail::Message::Field::Full.
-      return '' if name.match(/\=\?.*?\?\=/)
+      return '' if name.match?(/\=\?.*?\?\=/)
 
       # trim whitespace
-      name.sub!(/^\s+/, '')
-      name.sub!(/\s+$/, '')
-      name.sub!(/\s+/, ' ')
+      name = name.strip.gsub(/\s+/, ' ')
 
       # Disregard numeric names (e.g. 123456.1234@compuserve.com)
-      return "" if name.match(/^[\d ]+$/)
+      return '' if name.match?(/^[\d ]+$/)
 
       name.sub!(/^\((.*)\)$/, '\1') # remove outermost parenthesis
       name.sub!(/^"(.*)"$/, '\1')   # remove outer quotation marks

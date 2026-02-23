@@ -25,13 +25,13 @@ module MailAddress
     # Remove non-UNIX-style newlines that would otherwise cause getToken_ to
     # choke. Remove multiple consecutive whitespace characters for the same
     # reason.
-    str = self.collapse_whitespace(str)
+    str = collapse_whitespace(str)
     i = 0
-    while (i < str.length)
+    while i < str.length
       token = get_token(str, i)
-      if self.is_address_separator(token) || (token == ' ' && self.is_valid(self.parse_internal(email)))
-        if !self.is_empty_or_whitespace(email)
-          result.push(self.parse_internal(email))
+      if is_address_separator(token) || (token == ' ' && is_valid(parse_internal(email)))
+        if !is_empty_or_whitespace(email)
+          result.push(parse_internal(email))
         end
         email = ''
         i += 1
@@ -42,34 +42,34 @@ module MailAddress
     end
 
     # Add the final token.
-    if (!self.is_empty_or_whitespace(email))
-      result.push(self.parse_internal(email))
+    if !is_empty_or_whitespace(email)
+      result.push(parse_internal(email))
     end
-    return result
+    result
   end
 
   def self.parse_internal(addr)
     name = ''
     address = ''
     i = 0
-    while (i < addr.length)
+    while i < addr.length
       token = get_token(addr, i)
-      if (token[0] == '<' && token.index('>'))
+      if token[0] == '<' && token.index('>')
         end_i = token.index('>')
         address = token[1, end_i - 1]
-      elsif (address == '')
+      elsif address == ''
         name << token
       end
       i += token.length
     end
 
     # Check if it's a simple email address of the form "jlim@google.com".
-    if (address == '' && name.index('@'))
+    if address == '' && name.index('@')
       address = name
       name = ''
     end
 
-    name = self.collapse_whitespace(name)
+    name = collapse_whitespace(name)
     name = name[1 .. -2] if name.start_with?('\'') && name.end_with?('\'')
     name = name[1 .. -2] if name.start_with?('"') && name.end_with?('"')
 
@@ -89,7 +89,7 @@ module MailAddress
     p = OPENERS_.index(ch)
     return ch unless p
 
-    if (self.is_escaped_dbl_quote(str, pos))
+    if is_escaped_dbl_quote(str, pos)
       # If an opener is an escaped quote we do not treat it as a real opener
       # and keep accumulating the token.
       return ch
@@ -99,19 +99,18 @@ module MailAddress
 
     # If the closer is a quote we go forward skipping escaped quotes until we
     # hit the real closing one.
-    while (end_pos && end_pos >= 0 && self.is_escaped_dbl_quote(str, end_pos))
+    while end_pos && end_pos >= 0 && is_escaped_dbl_quote(str, end_pos)
       end_pos = str.index(closer_char, end_pos + 1)
     end
 
-    token = (end_pos && end_pos >= 0) ? str[pos .. end_pos] : ch
-    return token
+    (end_pos && end_pos >= 0) ? str[pos .. end_pos] : ch
   end
 
   def self.is_escaped_dbl_quote(str, pos)
     return false if str[pos] != '"'
     slash_count = 0
 
-    for idx in (pos - 1).downto(0)
+    (pos - 1).downto(0) do |idx|
       break unless str[idx] == '\\'
       slash_count += 1
     end
@@ -123,7 +122,7 @@ module MailAddress
   end
 
   def self.is_empty_or_whitespace(str)
-    /\A[\s\xc2\xa0]*\z/ =~ str
+    str.match?(/\A[\s\xc2\xa0]*\z/)
   end
 
   def self.is_address_separator(ch)

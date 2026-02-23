@@ -1,5 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mail_address/version'
 
@@ -8,8 +7,8 @@ Gem::Specification.new do |spec|
   spec.version       = MailAddress::VERSION
   spec.authors       = ["Kizashi Nagata"]
   spec.email         = ["kizashi1122@gmail.com"]
-  spec.summary       = %q{Simple Mail Address Parser}
-  spec.description   = %q{A practical mail address parser implemented based on Perl Module Mail::Address.}
+  spec.summary       = "Simple Mail Address Parser"
+  spec.description   = "A practical mail address parser implemented based on Perl Module Mail::Address."
   spec.homepage      = "https://github.com/kizashi1122/mail_address"
   spec.license       = "MIT"
 
