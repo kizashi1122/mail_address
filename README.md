@@ -1,20 +1,18 @@
-# MailAddress [![Build Status](https://travis-ci.org/kizashi1122/mail_address.svg)](https://travis-ci.org/kizashi1122/mail_address) [![Coverage Status](https://coveralls.io/repos/kizashi1122/mail_address/badge.png)](https://coveralls.io/r/kizashi1122/mail_address) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kizashi1122/mail_address/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kizashi1122/mail_address/?branch=master)
+# MailAddress [![Test](https://github.com/kizashi1122/mail_address/actions/workflows/test.yml/badge.svg)](https://github.com/kizashi1122/mail_address/actions/workflows/test.yml) [![Coverage Status](https://coveralls.io/repos/github/kizashi1122/mail_address/badge.svg?branch=master)](https://coveralls.io/github/kizashi1122/mail_address?branch=master)
 
-MailAddress is a port of Mail::Address from Perl.
-
-[mail](https://github.com/mikel/mail) is a great gem library. But some email addresses are unparsable with it. In perl, [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod) is a very common library to parse email addresses. Mail::Address conviniently can parse even non-RFC-compliant email addresses such as:
+MailAddress is a Ruby port of Perl's [Mail::Address](http://search.cpan.org/~markov/MailTools-2.14/lib/Mail/Address.pod), a widely used email address parser. While the [mail](https://github.com/mikel/mail) gem is excellent, it cannot parse certain email addresses. Mail::Address can conveniently parse even non-RFC-compliant email addresses such as:
 
 ```rb
 # mail gem cannot parse the following addresses
 Ello [Do Not Reply] <do-not-reply@ello.co> # [, ] are not permitted according to RFC5322
 大阪 太郎<osaka@example.com> # no whitespace just before `<`
 ```
-But Mail::Address(Perl) has some bad points (below). These are fixed in MailAddress.
+However, Mail::Address (Perl) has some limitations that MailAddress addresses:
 
-- if no ending parenthesis in name part, cannot parse correctly.
-- Modifications of name part are too much.
+- Fails to parse correctly when the name part has no closing parenthesis.
+- Over-modifies the name part.
 
-Many people copy and paste email addresses from Excel or the other spreadsheets. In this case, addresses are separated by whitespace(tab or space). To enable to parse this, also ported from a parser part of [Google Closure Library](https://github.com/google/closure-library/blob/master/closure/goog/format/emailaddress.js).
+Many people copy and paste email addresses from Excel or other spreadsheets, where addresses are separated by whitespace (tab or space). To handle this, MailAddress also includes a parser ported from the [Google Closure Library](https://github.com/google/closure-library/blob/master/closure/goog/format/emailaddress.js).
 
 ## Installation
 
@@ -34,8 +32,8 @@ Or install it yourself as:
 
 ## Usage
 
-It's almost the same as Mail::Address(Perl).
-But in this module, removed `comment` property from address class in version v1.0.0. Most people don't realize comment I think.
+The API is almost the same as Mail::Address (Perl).
+Note that the `comment` property was removed from the address class in v1.0.0, since most users are unlikely to need it.
 
 ```rb
 require 'mail_address'
@@ -60,10 +58,10 @@ p addrs[1].user       # "osaka"
 p addrs[1].original   # "大阪 太郎 <osaka@example.jp>"
 ```
 
-`address.name` and `address.phrase` are almost same.
+`address.name` and `address.phrase` are almost the same.
 `address.phrase` keeps outermost double quotes or parentheses.
 
-if you specify single email address, you can use `parse_first`.
+If you only need a single address, you can use `parse_first`.
 
 ```rb
 line = "John Doe <john@example.com>"
@@ -83,7 +81,7 @@ addrs = MailAddress.parse_simple(line)
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/mail_address/fork )
+1. Fork it ( https://github.com/kizashi1122/mail_address/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
