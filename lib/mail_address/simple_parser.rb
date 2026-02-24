@@ -20,7 +20,7 @@ module MailAddress
 
   def self.parse_simple(str)
     result = []
-    email = token = ''
+    email = token = ''.dup
 
     # Remove non-UNIX-style newlines that would otherwise cause getToken_ to
     # choke. Remove multiple consecutive whitespace characters for the same
@@ -33,7 +33,7 @@ module MailAddress
         if !is_empty_or_whitespace(email)
           result.push(parse_internal(email))
         end
-        email = ''
+        email = ''.dup
         i += 1
         next
       end
@@ -49,8 +49,8 @@ module MailAddress
   end
 
   def self.parse_internal(addr)
-    name = ''
-    address = ''
+    name = ''.dup
+    address = ''.dup
     i = 0
     while i < addr.length
       token = get_token(addr, i)
